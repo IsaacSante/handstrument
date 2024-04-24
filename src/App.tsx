@@ -1,11 +1,7 @@
 import "./App.css";
-import HandTracking from "./components/handTracking";
+import Home from "./pages/home";
 function App() {
-  return (
-    <>
-      <HandTracking />
-    </>
-  );
+  return <Home devMode={true} />;
 }
 
 export default App;

@@ -6,9 +6,7 @@ import {
 
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
-
-// instruments to track
-// piano-guitar-drums
+import { useState } from "react";
 
 type HandTrackingProps = {
   // Additional props can be added if needed
@@ -20,6 +18,10 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   // Reference to the HandLandmarker instance
   const handLandmarkerRef = useRef<HandLandmarker | null>(null);
+  const [videoDimensions, setVideoDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
 
   useEffect(() => {
     async function setupHandTracking() {
@@ -34,7 +36,7 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
           baseOptions: {
             modelAssetPath:
               "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task",
-            delegate: "CPU",
+            delegate: "GPU",
           },
           runningMode: "VIDEO",
           numHands: 2,
@@ -51,6 +53,16 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.addEventListener("loadeddata", () => {
+            // set the parent div to the w/h of video for absolute styling
+            videoRef.current ? (
+              setVideoDimensions({
+                width: videoRef.current.videoWidth,
+                height: videoRef.current.videoHeight,
+              })
+            ) : (
+              <></>
+            );
+
             // Begins the webcam feed processing
             requestAnimationFrame(predictWebcam);
           });
@@ -89,13 +101,14 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
 
           // Draw hand landmarks and connections if results are available
           if (results && results.landmarks) {
+            //console.log(results);
             for (const landmarks of results.landmarks) {
               drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
-                color: "#00FF00",
+                color: "#FF0000",
                 lineWidth: 5,
               });
               drawLandmarks(canvasCtx, landmarks, {
-                color: "#FF0000",
+                color: "#F5F5DC",
                 lineWidth: 2,
               });
             }
@@ -113,14 +126,25 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
   }, []);
 
   return (
-    <>
+    <div
+      style={{
+        position: "relative",
+        width: `${videoDimensions.width}px`,
+        height: `${videoDimensions.height}px`,
+      }}
+    >
       <video
         ref={videoRef}
         autoPlay
         playsInline
         style={{
           position: "absolute",
-          transform: "translateY(-100%) scaleX(-1)",
+          top: 0,
+          left: 0,
+          transform: "scaleX(-1)",
+          width: "100%",
+          height: "auto",
+          borderRadius: "25px",
         }}
       />
       <canvas
@@ -129,9 +153,12 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
           position: "absolute",
           top: 0,
           left: 0,
+          width: "100%",
+          height: "auto",
+          borderRadius: "25px",
         }}
       />
-    </>
+    </div>
   );
 };
 
