@@ -9,6 +9,7 @@
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
   padding: 0;
+  background-image: linear-gradient(to right, #f5f5dc, #ffe4e1);
 }
 
 body {
@@ -17,5 +18,4 @@ body {
   min-height: 100vh;
   min-width: 320px;
   min-height: 100vh;
-  background-image: linear-gradient(to right, #f5f5dc, #ffe4e1);
 }

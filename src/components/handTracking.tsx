@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   HandLandmarker,
   FilesetResolver,
@@ -6,13 +6,15 @@ import {
 
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
-import { useState } from "react";
 
-type HandTrackingProps = {
-  // Additional props can be added if needed
-};
+import { HandTrackingProps, HandednessArray } from "../types/handTracking";
 
-const HandTracking: React.FC<HandTrackingProps> = () => {
+const HandTracking: React.FC<HandTrackingProps> = ({
+  leftHandActive,
+  rightHandActive,
+  leftHandPinched,
+  rightHandPinched,
+}) => {
   // References to the video and canvas HTML elements
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -70,6 +72,40 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
       });
     }
 
+    function updateHandPresence(handednesses: HandednessArray) {
+      // Temporary variables to track the presence of hands
+      let foundLeftHand = false;
+      let foundRightHand = false;
+
+      // Check handedness and update refs accordingly
+      //  im updating the opposite hands because the canvas is inverted
+      //  so the model thinks each hand is the other
+      if (handednesses) {
+        for (const handedness of handednesses) {
+          if (handedness.length > 0) {
+            const hand = handedness[0]; // Assuming only one handedness per hand
+            if (hand.displayName === "Left") {
+              console.log("LOGIC REACHING HERE");
+              foundRightHand = true;
+              rightHandActive.current = true;
+            } else if (hand.displayName === "Right") {
+              console.log("LOGIC REACHING HERE");
+              foundLeftHand = true;
+              leftHandActive.current = true;
+            }
+          }
+        }
+      }
+
+      // Update refs if no hand is found in the current frame
+      if (!foundLeftHand) {
+        leftHandActive.current = false;
+      }
+      if (!foundRightHand) {
+        rightHandActive.current = false;
+      }
+    }
+
     async function predictWebcam() {
       const video = videoRef.current;
       const canvas = canvasRef.current;
@@ -101,7 +137,7 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
 
           // Draw hand landmarks and connections if results are available
           if (results && results.landmarks) {
-            //console.log(results);
+            //console.log(JSON.stringify(results));
             for (const landmarks of results.landmarks) {
               drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
                 color: "#FF0000",
@@ -113,6 +149,9 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
               });
             }
           }
+
+          // Call the function to update hand presence
+          updateHandPresence(results.handednesses);
 
           canvasCtx.restore();
           // Request next frame processing
