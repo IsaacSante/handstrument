@@ -7,7 +7,12 @@ import {
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
 
-import { HandTrackingProps, HandednessArray } from "../types/handTracking";
+import {
+  HandTrackingProps,
+  HandednessArray,
+  Landmark,
+  Landmarks,
+} from "../types/handTracking";
 
 const HandTracking: React.FC<HandTrackingProps> = ({
   leftHandActive,
@@ -48,6 +53,45 @@ const HandTracking: React.FC<HandTrackingProps> = ({
       enableWebcam();
     }
 
+    // Calculate the Euclidean distance between two points
+    const calculateDistance = (point1: Landmark, point2: Landmark) => {
+      const xDiff = point1.x - point2.x;
+      const yDiff = point1.y - point2.y;
+      const zDiff = point1.z - point2.z;
+      return Math.sqrt(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff);
+    };
+
+    const detectPinch = (
+      landmarks: Landmarks,
+      indexFingerTipIndex: number,
+      thumbTipIndex: number,
+      handType: "Left" | "Right"
+    ) => {
+      const pinchThreshold = 0.1; // define your threshold here
+      const distance = calculateDistance(
+        landmarks[indexFingerTipIndex],
+        landmarks[thumbTipIndex]
+      );
+      //console.log(`${handType} hand distance: ${distance}`);
+      const isPinching = distance < pinchThreshold;
+
+      if (isPinching) {
+        console.log(`${handType} hand is pinching`);
+        // Here you should set the state or ref for the pinching state
+        if (handType === "Left") {
+          leftHandPinched.current = true; // This should match how you manage the pinched state
+        } else {
+          rightHandPinched.current = true; // This should match how you manage the pinched state
+        }
+      } else {
+        if (handType === "Left") {
+          leftHandPinched.current = false; // This should match how you manage the pinched state
+        } else {
+          rightHandPinched.current = false; // This should match how you manage the pinched state
+        }
+      }
+    };
+
     function enableWebcam() {
       // Set up webcam constraints
       const constraints = { video: true };
@@ -72,27 +116,30 @@ const HandTracking: React.FC<HandTrackingProps> = ({
       });
     }
 
-    function updateHandPresence(handednesses: HandednessArray) {
+    // detect hand presence and which hand it is
+    // delegate pinching logic
+    function updateHandPresence(
+      handednesses: HandednessArray,
+      landmarks: Landmarks[]
+    ) {
       // Temporary variables to track the presence of hands
       let foundLeftHand = false;
       let foundRightHand = false;
 
       // Check handedness and update refs accordingly
-      //  im updating the opposite hands because the canvas is inverted
-      //  so the model thinks each hand is the other
-      if (handednesses) {
-        for (const handedness of handednesses) {
-          if (handedness.length > 0) {
-            const hand = handedness[0]; // Assuming only one handedness per hand
-            if (hand.displayName === "Left") {
-              console.log("LOGIC REACHING HERE");
-              foundRightHand = true;
-              rightHandActive.current = true;
-            } else if (hand.displayName === "Right") {
-              console.log("LOGIC REACHING HERE");
-              foundLeftHand = true;
-              leftHandActive.current = true;
-            }
+      // Im updating the opposite hands because the model thinks each hand is the other
+      for (let i = 0; i < handednesses.length; i++) {
+        const handedness = handednesses[i];
+        if (handedness.length > 0) {
+          const hand = handedness[0]; // Assuming only one handedness per hand
+          if (hand.displayName === "Left") {
+            foundRightHand = true;
+            rightHandActive.current = true;
+            detectPinch(landmarks[i], 8, 4, "Right");
+          } else if (hand.displayName === "Right") {
+            foundLeftHand = true;
+            leftHandActive.current = true;
+            detectPinch(landmarks[i], 8, 4, "Left");
           }
         }
       }
@@ -150,8 +197,8 @@ const HandTracking: React.FC<HandTrackingProps> = ({
             }
           }
 
-          // Call the function to update hand presence
-          updateHandPresence(results.handednesses);
+          // Call the function to update hand presence and detect pinch
+          updateHandPresence(results.handednesses, results.landmarks);
 
           canvasCtx.restore();
           // Request next frame processing

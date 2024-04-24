@@ -13,3 +13,11 @@ export type Handedness = {
 };
 
 export type HandednessArray = Handedness[][];
+
+export type Landmark = {
+  x: number;
+  y: number;
+  z: number;
+};
+
+export type Landmarks = Landmark[];

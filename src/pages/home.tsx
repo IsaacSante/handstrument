@@ -18,7 +18,9 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   // const rightHandVel = useRef<boolean>(false);
   // Correct place to log ref values using useEffect
 
-  if (devMode) {
+  const debug = false;
+
+  if (devMode && debug) {
     useEffect(() => {
       const intervalId = setInterval(() => {
         console.log("Left Hand Active:", leftHandActive.current);

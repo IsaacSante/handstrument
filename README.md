@@ -8,7 +8,7 @@ Phase 2?: Expand app to include piano and guitar
 
 ## Todo
 
-- Calculate pinch
+- Update pinch ref
 - Calculate velocity
 - Import Tone or other music library
 - Tie pinch to trigger drum sample
@@ -20,3 +20,4 @@ Phase 2?: Expand app to include piano and guitar
 - getting vision library via cdn @mediapipe/tasks-vision
 - Console logging finger values
 - checking if left and right hand are present
+- Calculate pinch
