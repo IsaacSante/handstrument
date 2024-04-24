@@ -97,7 +97,15 @@ const HandTracking: React.FC<HandTrackingProps> = () => {
 
   return (
     <>
-      <video ref={videoRef} autoPlay playsInline />
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        style={{
+          position: "absolute",
+          transform: "translateY(-100%)",
+        }}
+      />
       <canvas
         ref={canvasRef}
         style={{
