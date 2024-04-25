@@ -1,5 +1,5 @@
 import useDetectPinch from "./useDetectPinch";
-import { useRef, MutableRefObject } from "react";
+import { MutableRefObject } from "react";
 import { HandednessArray, Landmarks } from "../types/handTracking";
 
 interface UseDetectHandsParams {
