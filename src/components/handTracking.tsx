@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  HandLandmarker,
-  FilesetResolver,
-} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
-
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
+import detectPinch from "../utils/distanceCalculations";
 
 import {
   HandTrackingProps,
   HandednessArray,
-  Landmark,
   Landmarks,
 } from "../types/handTracking";
+
+import {
+  HandLandmarker,
+  FilesetResolver,
+} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
 
 const HandTracking: React.FC<HandTrackingProps> = ({
   leftHandActive,
@@ -53,45 +53,6 @@ const HandTracking: React.FC<HandTrackingProps> = ({
       enableWebcam();
     }
 
-    // Calculate the Euclidean distance between two points
-    const calculateDistance = (point1: Landmark, point2: Landmark) => {
-      const xDiff = point1.x - point2.x;
-      const yDiff = point1.y - point2.y;
-      const zDiff = point1.z - point2.z;
-      return Math.sqrt(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff);
-    };
-
-    const detectPinch = (
-      landmarks: Landmarks,
-      indexFingerTipIndex: number,
-      thumbTipIndex: number,
-      handType: "Left" | "Right"
-    ) => {
-      const pinchThreshold = 0.1; // define your threshold here
-      const distance = calculateDistance(
-        landmarks[indexFingerTipIndex],
-        landmarks[thumbTipIndex]
-      );
-      //console.log(`${handType} hand distance: ${distance}`);
-      const isPinching = distance < pinchThreshold;
-
-      if (isPinching) {
-        console.log(`${handType} hand is pinching`);
-        // Here you should set the state or ref for the pinching state
-        if (handType === "Left") {
-          leftHandPinched.current = true; // This should match how you manage the pinched state
-        } else {
-          rightHandPinched.current = true; // This should match how you manage the pinched state
-        }
-      } else {
-        if (handType === "Left") {
-          leftHandPinched.current = false; // This should match how you manage the pinched state
-        } else {
-          rightHandPinched.current = false; // This should match how you manage the pinched state
-        }
-      }
-    };
-
     function enableWebcam() {
       // Set up webcam constraints
       const constraints = { video: true };
@@ -99,16 +60,12 @@ const HandTracking: React.FC<HandTrackingProps> = ({
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.addEventListener("loadeddata", () => {
-            // set the parent div to the w/h of video for absolute styling
-            videoRef.current ? (
+            if (videoRef.current) {
               setVideoDimensions({
                 width: videoRef.current.videoWidth,
                 height: videoRef.current.videoHeight,
-              })
-            ) : (
-              <></>
-            );
-
+              });
+            }
             // Begins the webcam feed processing
             requestAnimationFrame(predictWebcam);
           });
@@ -135,11 +92,11 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           if (hand.displayName === "Left") {
             foundRightHand = true;
             rightHandActive.current = true;
-            detectPinch(landmarks[i], 8, 4, "Right");
+            detectPinch(landmarks[i], 8, 4, "Right", rightHandPinched);
           } else if (hand.displayName === "Right") {
             foundLeftHand = true;
             leftHandActive.current = true;
-            detectPinch(landmarks[i], 8, 4, "Left");
+            detectPinch(landmarks[i], 8, 4, "Left", leftHandPinched);
           }
         }
       }
