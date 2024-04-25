@@ -1,18 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
-import { HAND_CONNECTIONS } from "@mediapipe/hands";
-import detectPinch from "../utils/distanceCalculations";
-
-import {
-  HandTrackingProps,
-  HandednessArray,
-  Landmarks,
-} from "../types/handTracking";
-
 import {
   HandLandmarker,
   FilesetResolver,
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
+import React, { useEffect, useRef, useState } from "react";
+import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
+import { HAND_CONNECTIONS } from "@mediapipe/hands";
+import useDetectHands from "../utils/useDetectHands";
+import { HandTrackingProps } from "../types/handTracking";
 
 const HandTracking: React.FC<HandTrackingProps> = ({
   leftHandActive,
@@ -23,12 +17,15 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   // References to the video and canvas HTML elements
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  // Reference to the HandLandmarker instance
   const handLandmarkerRef = useRef<HandLandmarker | null>(null);
   const [videoDimensions, setVideoDimensions] = useState({
     width: 0,
     height: 0,
   });
+
+  // buffer to calculate average pinch distance, like some easing
+  const leftHandPinchBuffer = useRef(null);
+  const rightHandPinchBuffer = useRef(null);
 
   useEffect(() => {
     async function setupHandTracking() {
@@ -71,43 +68,6 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           });
         }
       });
-    }
-
-    // detect hand presence and which hand it is
-    // delegate pinching logic
-    function updateHandPresence(
-      handednesses: HandednessArray,
-      landmarks: Landmarks[]
-    ) {
-      // Temporary variables to track the presence of hands
-      let foundLeftHand = false;
-      let foundRightHand = false;
-
-      // Check handedness and update refs accordingly
-      // Im updating the opposite hands because the model thinks each hand is the other
-      for (let i = 0; i < handednesses.length; i++) {
-        const handedness = handednesses[i];
-        if (handedness.length > 0) {
-          const hand = handedness[0]; // Assuming only one handedness per hand
-          if (hand.displayName === "Left") {
-            foundRightHand = true;
-            rightHandActive.current = true;
-            detectPinch(landmarks[i], 8, 4, "Right", rightHandPinched);
-          } else if (hand.displayName === "Right") {
-            foundLeftHand = true;
-            leftHandActive.current = true;
-            detectPinch(landmarks[i], 8, 4, "Left", leftHandPinched);
-          }
-        }
-      }
-
-      // Update refs if no hand is found in the current frame
-      if (!foundLeftHand) {
-        leftHandActive.current = false;
-      }
-      if (!foundRightHand) {
-        rightHandActive.current = false;
-      }
     }
 
     async function predictWebcam() {
@@ -154,8 +114,17 @@ const HandTracking: React.FC<HandTrackingProps> = ({
             }
           }
 
-          // Call the function to update hand presence and detect pinch
-          updateHandPresence(results.handednesses, results.landmarks);
+          // Call the function to check if hands in frame
+          useDetectHands({
+            handednesses: results.handednesses,
+            landmarks: results.landmarks,
+            rightHandActive,
+            rightHandPinched,
+            rightHandPinchBuffer,
+            leftHandActive,
+            leftHandPinched,
+            leftHandPinchBuffer,
+          });
 
           canvasCtx.restore();
           // Request next frame processing

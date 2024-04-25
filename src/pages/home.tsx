@@ -10,15 +10,12 @@ type HomeProps = {
 };
 
 const Home: React.FC<HomeProps> = ({ devMode = false }) => {
+  const debug = false;
+
   const leftHandActive = useRef<boolean>(false);
   const leftHandPinched = useRef<boolean>(false);
-  // const leftHandVel = useRef<boolean>(false);
   const rightHandActive = useRef<boolean>(false);
   const rightHandPinched = useRef<boolean>(false);
-  // const rightHandVel = useRef<boolean>(false);
-  // Correct place to log ref values using useEffect
-
-  const debug = false;
 
   if (devMode && debug) {
     useEffect(() => {
