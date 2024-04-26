@@ -2,8 +2,6 @@ import { Landmark, Landmarks } from "../types/handTracking";
 import { MutableRefObject } from "react";
 import { calculateVelocity } from "./useCalculateVelocity";
 
-const bufferLength = 5;
-
 const createBuffer = (length: number) => {
   const buffer = new Array(length).fill(false);
   return {
@@ -32,6 +30,8 @@ const useDetectPinch = (
   handPinched: MutableRefObject<boolean>,
   bufferRef: MutableRefObject<any>
 ) => {
+  const bufferLength = 5;
+
   if (!bufferRef.current) {
     bufferRef.current = createBuffer(bufferLength);
   }
@@ -48,8 +48,6 @@ const useDetectPinch = (
 
   handPinched.current = bufferRef.current.isPinching();
   if (handPinched.current) {
-    // console.log(`${handType} hand is pinching`);
-    // Now also calculate velocity for landmark at index 6
     const velocity =
       calculateVelocity(landmarks[6], handType) * velocityMultiplier;
     console.log(`${handType} hand velocity:`, velocity);
