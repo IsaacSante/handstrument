@@ -28,7 +28,8 @@ const useDetectPinch = (
   thumbTipIndex: number,
   handType: "Left" | "Right",
   handPinched: MutableRefObject<boolean>,
-  bufferRef: MutableRefObject<any>
+  bufferRef: MutableRefObject<any>,
+  handVelocity: MutableRefObject<number>
 ) => {
   const bufferLength = 5;
 
@@ -48,9 +49,9 @@ const useDetectPinch = (
 
   handPinched.current = bufferRef.current.isPinching();
   if (handPinched.current) {
-    const velocity =
+    handVelocity.current =
       calculateVelocity(landmarks[6], handType) * velocityMultiplier;
-    console.log(`${handType} hand velocity:`, velocity);
+    console.log(`${handType} hand velocity:`, handVelocity.current);
   }
 };
 

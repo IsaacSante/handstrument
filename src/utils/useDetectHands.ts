@@ -7,9 +7,11 @@ interface UseDetectHandsParams {
   landmarks: Landmarks[];
   rightHandActive: MutableRefObject<boolean>;
   rightHandPinched: MutableRefObject<boolean>;
+  rightHandVelocity: MutableRefObject<number>; // Add this
   rightHandPinchBuffer: MutableRefObject<null | number[]>;
   leftHandActive: MutableRefObject<boolean>;
   leftHandPinched: MutableRefObject<boolean>;
+  leftHandVelocity: MutableRefObject<number>; // Add this
   leftHandPinchBuffer: MutableRefObject<null | number[]>;
 }
 
@@ -19,9 +21,11 @@ const useDetectHands = ({
   rightHandActive,
   rightHandPinched,
   rightHandPinchBuffer,
+  rightHandVelocity,
   leftHandActive,
   leftHandPinched,
   leftHandPinchBuffer,
+  leftHandVelocity,
 }: UseDetectHandsParams): void => {
   let foundLeftHand = false;
   let foundRightHand = false;
@@ -39,7 +43,8 @@ const useDetectHands = ({
           4,
           "Right",
           rightHandPinched,
-          rightHandPinchBuffer
+          rightHandPinchBuffer,
+          rightHandVelocity
         );
       } else if (hand.displayName === "Right") {
         foundLeftHand = true;
@@ -50,7 +55,8 @@ const useDetectHands = ({
           4,
           "Left",
           leftHandPinched,
-          leftHandPinchBuffer
+          leftHandPinchBuffer,
+          leftHandVelocity
         );
       }
     }

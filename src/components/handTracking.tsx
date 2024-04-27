@@ -13,6 +13,8 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   rightHandActive,
   leftHandPinched,
   rightHandPinched,
+  leftHandVelocity,
+  rightHandVelocity,
 }) => {
   // References to the video and canvas HTML elements
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -121,9 +123,11 @@ const HandTracking: React.FC<HandTrackingProps> = ({
             rightHandActive,
             rightHandPinched,
             rightHandPinchBuffer,
+            rightHandVelocity,
             leftHandActive,
             leftHandPinched,
             leftHandPinchBuffer,
+            leftHandVelocity,
           });
 
           canvasCtx.restore();

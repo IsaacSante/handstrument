@@ -16,6 +16,8 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   const leftHandPinched = useRef<boolean>(false);
   const rightHandActive = useRef<boolean>(false);
   const rightHandPinched = useRef<boolean>(false);
+  const rightHandVel = useRef<number>(0);
+  const leftHandVel = useRef<number>(0);
 
   if (devMode && debug) {
     useEffect(() => {
@@ -36,6 +38,8 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
           rightHandActive={rightHandActive}
           leftHandPinched={leftHandPinched}
           rightHandPinched={rightHandPinched}
+          leftHandVelocity={leftHandVel}
+          rightHandVelocity={rightHandVel}
         />
         <div style={{ minHeight: "500px" }}>
           {devMode ? <DevScreen /> : <InstrumentScreen />}

@@ -3,6 +3,8 @@ export type HandTrackingProps = {
   rightHandActive: React.MutableRefObject<boolean>;
   leftHandPinched: React.MutableRefObject<boolean>;
   rightHandPinched: React.MutableRefObject<boolean>;
+  leftHandVelocity: React.MutableRefObject<number>; // New addition
+  rightHandVelocity: React.MutableRefObject<number>; // New addition
 };
 
 export type Handedness = {
