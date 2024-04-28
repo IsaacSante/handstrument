@@ -14,6 +14,7 @@ const Section: React.FC<SectionProps> = ({
   const containerStyle: React.CSSProperties = {
     width: "100%",
     ...(className ? { className } : {}), // Only add className if provided
+    padding: "16px", // Default padding for all screen sizes
   };
 
   const titleStyle: React.CSSProperties = {
@@ -22,11 +23,11 @@ const Section: React.FC<SectionProps> = ({
     marginBottom: "16px", // equivalent to mb-4
   };
 
-  // Adjust padding for larger screens
-  const responsivePadding = window.matchMedia("(min-width: 768px)").matches
-    ? "32px"
-    : "16px";
-  containerStyle.padding = responsivePadding;
+  // Adjust padding for mobile screens
+  if (window.matchMedia("(max-width: 768px)").matches) {
+    containerStyle.padding = "8px";
+    titleStyle.fontSize = "20px"; // Adjust title size for smaller screens
+  }
 
   return (
     <div style={containerStyle}>

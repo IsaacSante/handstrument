@@ -152,7 +152,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
       );
 
     // Calculate the ratio for resizing the video dimensions
-    const ratio = isMobile ? 0.5 : 1; // Change this ratio as needed
+    const ratio = isMobile ? 0.25 : 1; // Change this ratio as needed
 
     // Update the video dimensions based on the calculated ratio
     setVideoDimensions({
@@ -184,7 +184,9 @@ const HandTracking: React.FC<HandTrackingProps> = ({
             background: "rgba(0, 0, 0, 0.7)",
             color: "rgba(33, 37, 41, 0.938)",
             fontSize: "20px",
-            zIndex: 1000, // Ensure it's above other content
+            zIndex: 1000,
+            top: 0,
+            left: 0,
           }}
         >
           <p>
@@ -201,7 +203,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           top: 0,
           left: 0,
           transform: "scaleX(-1)",
-          width: "100%", // Change this to your preferred width
+          width: "100%",
           height: "auto",
           borderRadius: "25px",
         }}
@@ -212,7 +214,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           position: "absolute",
           top: 0,
           left: 0,
-          width: "100%", // Change this to your preferred width
+          width: "100%",
           height: "auto",
           borderRadius: "25px",
         }}
