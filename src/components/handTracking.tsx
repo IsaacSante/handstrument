@@ -16,6 +16,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   rightHandPinched,
   leftHandVelocity,
   rightHandVelocity,
+  isMobile,
 }) => {
   // References to the video and canvas HTML elements
   const [loading, setLoading] = useState(true);

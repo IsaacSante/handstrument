@@ -3,22 +3,24 @@ import { CSSProperties } from "react";
 
 interface LayoutProps {
   children: React.ReactNode;
+  isMobile: boolean;
+}
+
+interface LayoutProps {
+  children: React.ReactNode;
+  isMobile: boolean;
 }
 
 const style: { containerMain: CSSProperties } = {
   containerMain: {
     display: "flex",
-    flexDirection: "column", // Now specifically using the FlexDirection type
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    maxWidth: "100%",
-    minHeight: "100vh", // Changed height to minHeight for better mobile responsiveness
     paddingTop: "2vh",
-    margin: "auto",
   },
-  // Define other styles here, ensuring to type them correctly
 };
 
-export default function Layout({ children }: LayoutProps) {
-  return <main style={style.containerMain}>{children}</main>;
+export default function Layout({ children, isMobile }: LayoutProps) {
+  return <main style={isMobile ? {} : style.containerMain}>{children}</main>;
 }

@@ -4,9 +4,10 @@ import Section from "../layout/section";
 
 interface IProps {
   onNoteChange: (note: string) => void;
+  isMobile: boolean; // New property added here
 }
 
-const NoteSelection: React.FC<IProps> = ({ onNoteChange }) => {
+const NoteSelection: React.FC<IProps> = ({ onNoteChange, isMobile }) => {
   const [note, setNote] = useState("C1");
 
   const handleChangeNote = (newNote: string) => {
@@ -19,7 +20,7 @@ const NoteSelection: React.FC<IProps> = ({ onNoteChange }) => {
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
+          flexDirection: isMobile ? "row" : "column",
           alignItems: "center",
         }}
       >
