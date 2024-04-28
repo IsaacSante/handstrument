@@ -51,9 +51,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
               <div style={{ width: "80%" }}>
                 <InstrumentScreen
                   note={selectedNote}
-                  leftHandActive={leftHandActive}
                   leftHandPinched={leftHandPinched}
-                  rightHandActive={rightHandActive}
                   rightHandPinched={rightHandPinched}
                   rightHandVel={rightHandVel}
                   leftHandVel={leftHandVel}

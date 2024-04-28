@@ -18,6 +18,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   rightHandVelocity,
 }) => {
   // References to the video and canvas HTML elements
+  const [loading, setLoading] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const handLandmarkerRef = useRef<HandLandmarker | null>(null);
@@ -66,6 +67,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
                 height: videoRef.current.videoHeight,
               });
             }
+            setLoading(false);
             // Begins the webcam feed processing
             requestAnimationFrame(predictWebcam);
           });
@@ -153,6 +155,26 @@ const HandTracking: React.FC<HandTrackingProps> = ({
         height: `${videoDimensions.height}px`,
       }}
     >
+      {loading && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            width: "100%",
+            height: "100%",
+            background: "rgba(0, 0, 0, 0.7)",
+            color: "rgba(33, 37, 41, 0.938)",
+            fontSize: "20px",
+            zIndex: 1000, // Ensure it's above other content
+          }}
+        >
+          <p>
+            Loading <br /> model...
+          </p>
+        </div>
+      )}
       <video
         ref={videoRef}
         autoPlay

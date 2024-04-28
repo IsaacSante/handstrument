@@ -6,22 +6,19 @@ import playSnare from "../utils/tone/usePlaySnare";
 
 type InstrumentUIProps = {
   note: string;
-  leftHandActive: React.MutableRefObject<boolean>;
   leftHandPinched: React.MutableRefObject<boolean>;
-  rightHandActive: React.MutableRefObject<boolean>;
   rightHandPinched: React.MutableRefObject<boolean>;
   rightHandVel: React.MutableRefObject<number>;
   leftHandVel: React.MutableRefObject<number>;
 };
 
-const VELOCITY_THRESHOLD: number = 1.0;
-const COOLDOWN_PERIOD: number = 100;
+const VELOCITY_THRESHOLD: number = 1.5;
+const COOLDOWN_PERIOD: number = 300;
+const UPDATE_INTERVAL: number = 1000;
 
 const InstrumentScreen: React.FC<InstrumentUIProps> = ({
   note,
-  leftHandActive,
   leftHandPinched,
-  rightHandActive,
   rightHandPinched,
   rightHandVel,
   leftHandVel,
@@ -33,9 +30,7 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
   }>({ leftVel: 0, rightVel: 0 });
 
   const [values, setValues] = useState({
-    leftHandActiveVal: false,
     leftHandPinchedVal: false,
-    rightHandActiveVal: false,
     rightHandPinchedVal: false,
   });
 
@@ -68,12 +63,10 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
   useEffect(() => {
     const interval = setInterval(() => {
       setValues({
-        leftHandActiveVal: leftHandActive.current,
         leftHandPinchedVal: leftHandPinched.current,
-        rightHandActiveVal: rightHandActive.current,
         rightHandPinchedVal: rightHandPinched.current,
       });
-    }, 1000);
+    }, UPDATE_INTERVAL);
 
     return () => clearInterval(interval);
   }, []);
