@@ -8,10 +8,9 @@ Phase 2?: Expand app to include piano and guitar
 
 ## Todo
 
-- Move states to zustand.
 - Import Tone or other music library.
 - Tie pinch to trigger drum sample.
-- Tie velocity to gain.
+- Velocity pass a certain threshold triggers music.
 
 ## Done
 
@@ -22,3 +21,7 @@ Phase 2?: Expand app to include piano and guitar
 - Calculate pinch
 - Update pinch ref
 - Calculate velocity
+
+## For future
+
+- Refactor refs to be in one state to make it simpler to mutate in child functions

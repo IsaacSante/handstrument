@@ -1,10 +1,9 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import HandTracking from "../components/handTracking";
 import InstrumentScreen from "../components/instrumentScreen";
 import DevScreen from "../components/devScreen";
 import Layout from "../components/layout/layout";
 
-// Define a type for the props
 type HomeProps = {
   devMode?: boolean;
 };

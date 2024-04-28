@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Section from "./layout/section";
+import playNote from "../utils/tone/usePlaySong";
 
 type DevScreenProps = {
   leftHandActive: React.MutableRefObject<boolean>;
@@ -10,6 +10,9 @@ type DevScreenProps = {
   leftHandVel: React.MutableRefObject<number>;
 };
 
+const VELOCITY_THRESHOLD: number = 1.5;
+const COOLDOWN_PERIOD: number = 200;
+
 const DevScreen: React.FC<DevScreenProps> = ({
   leftHandActive,
   leftHandPinched,
@@ -18,41 +21,43 @@ const DevScreen: React.FC<DevScreenProps> = ({
   rightHandVel,
   leftHandVel,
 }) => {
-  const [values, setValues] = useState({
-    leftHandActiveVal: false,
-    leftHandPinchedVal: false,
-    rightHandActiveVal: false,
-    rightHandPinchedVal: false,
-    rightHandVelVal: 0,
-    leftHandVelVal: 0,
-  });
+  const [lastPlayed, setLastPlayed] = useState<number>(0); // Timestamp of the last note played
+  const [velocities, setVelocities] = useState<{
+    leftVel: number;
+    rightVel: number;
+  }>({ leftVel: 0, rightVel: 0 });
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setValues({
-        leftHandActiveVal: leftHandActive.current,
-        leftHandPinchedVal: leftHandPinched.current,
-        rightHandActiveVal: rightHandActive.current,
-        rightHandPinchedVal: rightHandPinched.current,
-        rightHandVelVal: rightHandVel.current,
-        leftHandVelVal: leftHandVel.current,
-      });
-    }, 100);
+      const newLeftVel: number = leftHandVel.current;
+      const newRightVel: number = rightHandVel.current;
+      const currentTime: number = Date.now();
 
-    return () => clearInterval(interval);
-  }, []);
+      setVelocities({ leftVel: newLeftVel, rightVel: newRightVel });
+
+      if (
+        (newLeftVel > VELOCITY_THRESHOLD || newRightVel > VELOCITY_THRESHOLD) &&
+        currentTime - lastPlayed > COOLDOWN_PERIOD
+      ) {
+        playNote();
+        setLastPlayed(currentTime);
+      }
+    }, 100); // Check every 100ms
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [lastPlayed]); // Dependence on lastPlayed to trigger re-rendering after playing a note
 
   return (
-    <Section title="Dev Tools">
-      <div>
-        <p>Left Hand Active: {values.leftHandActiveVal.toString()}</p>
-        <p>Left Hand Pinched: {values.leftHandPinchedVal.toString()}</p>
-        <p>Right Hand Active: {values.rightHandActiveVal.toString()}</p>
-        <p>Right Hand Pinched: {values.rightHandPinchedVal.toString()}</p>
-        <p>Right Hand Velocity: {values.rightHandVelVal}</p>
-        <p>Left Hand Velocity: {values.leftHandVelVal}</p>
-      </div>
-    </Section>
+    <div>
+      <p>Left Hand Active: {leftHandActive.current.toString()}</p>
+      <p>Left Hand Pinched: {leftHandPinched.current.toString()}</p>
+      <p>Right Hand Active: {rightHandActive.current.toString()}</p>
+      <p>Right Hand Pinched: {rightHandPinched.current.toString()}</p>
+      <p>Right Hand Velocity: {velocities.rightVel}</p>
+      <p>Left Hand Velocity: {velocities.leftVel}</p>
+    </div>
   );
 };
 

@@ -1,5 +1,9 @@
 import Section from "./layout/section";
 
 export default function InstrumentScreen() {
-  return <Section title="Instruments" />;
+  return (
+    <Section title="Instruments">
+      <p>test </p>
+    </Section>
+  );
 }

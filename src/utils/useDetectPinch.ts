@@ -31,7 +31,7 @@ const useDetectPinch = (
   bufferRef: MutableRefObject<any>,
   handVelocity: MutableRefObject<number>
 ) => {
-  const bufferLength = 10;
+  const bufferLength = 15;
   const velocityDecayRate = 0.9; // Decay rate per frame
 
   if (!bufferRef.current) {
@@ -39,7 +39,7 @@ const useDetectPinch = (
   }
 
   const velocityMultiplier = 1000;
-  const pinchThreshold = 0.2;
+  const pinchThreshold = 0.1;
   const distance = calculateDistance(
     landmarks[indexFingerTipIndex],
     landmarks[thumbTipIndex]
