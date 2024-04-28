@@ -28,13 +28,9 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     height: 0,
   });
 
-  // useEffect(() => {
-  //   console.log(videoDimensions);
-  // }, [videoDimensions]);
-
-  // useEffect(() => {
-  //   console.log(videoDimensions);
-  // }, [videoDimensions]);
+  useEffect(() => {
+    console.log(videoDimensions);
+  }, [videoDimensions]);
 
   // buffer to calculate average pinch distance, like some easing
   const leftHandPinchBuffer = useRef(null);
