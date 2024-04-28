@@ -34,3 +34,7 @@ This is the first stage of such an app, starting off with drums and might expand
 - Refactor refs to be in one state to make it simpler to mutate in child functions
 
 - Expand app to include piano and guitar guestures.
+
+## Personal note
+
+Audio wont work on IOS if phone is in silent mode!

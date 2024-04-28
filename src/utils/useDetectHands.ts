@@ -34,6 +34,18 @@ const useDetectHands = ({
   let foundLeftHand = false;
   let foundRightHand = false;
 
+  const flushLeft = () => {
+    leftHandActive.current = false;
+    leftHandPinched.current = false;
+    leftHandVelocity.current = 0;
+  };
+
+  const flushRight = () => {
+    rightHandActive.current = false;
+    rightHandPinched.current = false;
+    rightHandVelocity.current = 0;
+  };
+
   if (!canvasCtx) return;
 
   for (let i = 0; i < handednesses.length; i++) {
@@ -70,18 +82,19 @@ const useDetectHands = ({
           isMobile
         );
       }
+    } else {
+      foundRightHand = false;
+      foundLeftHand = false;
+      flushLeft();
+      flushRight();
     }
   }
 
   if (!foundLeftHand) {
-    leftHandActive.current = false;
-    leftHandPinched.current = false;
-    leftHandVelocity.current = 0;
+    flushLeft();
   }
   if (!foundRightHand) {
-    rightHandActive.current = false;
-    rightHandPinched.current = false;
-    rightHandVelocity.current = 0;
+    flushRight();
   }
 };
 
