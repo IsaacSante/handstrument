@@ -73,6 +73,8 @@ const useDetectPinch = (
     landmarks[thumbTipIndex]
   );
 
+  console.log(distance);
+
   const isPinching = distance < pinchThreshold;
   bufferRef.current.push(isPinching);
 

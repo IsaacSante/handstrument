@@ -70,6 +70,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
                 rightHandPinched={rightHandPinched}
                 rightHandVel={rightHandVel}
                 leftHandVel={leftHandVel}
+                isMobile={isMobile}
               />
               <NoteSelection
                 onNoteChange={setSelectedNote}

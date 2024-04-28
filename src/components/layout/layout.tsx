@@ -21,6 +21,16 @@ const style: { containerMain: CSSProperties } = {
   },
 };
 
+const mobileStyle: { containerMain: CSSProperties } = {
+  containerMain: {
+    padding: "2rem",
+  },
+};
+
 export default function Layout({ children, isMobile }: LayoutProps) {
-  return <main style={isMobile ? {} : style.containerMain}>{children}</main>;
+  return (
+    <main style={isMobile ? mobileStyle.containerMain : style.containerMain}>
+      {children}
+    </main>
+  );
 }

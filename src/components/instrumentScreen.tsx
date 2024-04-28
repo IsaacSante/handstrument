@@ -10,9 +10,9 @@ type InstrumentUIProps = {
   rightHandPinched: React.MutableRefObject<boolean>;
   rightHandVel: React.MutableRefObject<number>;
   leftHandVel: React.MutableRefObject<number>;
+  isMobile: boolean;
 };
 
-const VELOCITY_THRESHOLD: number = 1.5;
 const COOLDOWN_PERIOD: number = 300;
 const UPDATE_INTERVAL: number = 1000;
 
@@ -22,6 +22,7 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
   rightHandPinched,
   rightHandVel,
   leftHandVel,
+  isMobile,
 }) => {
   const [lastPlayed, setLastPlayed] = useState<number>(0); // Timestamp of the last note played
   const [velocities, setVelocities] = useState<{
@@ -33,6 +34,8 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
     leftHandPinchedVal: false,
     rightHandPinchedVal: false,
   });
+
+  const VELOCITY_THRESHOLD: number = isMobile ? 0.25 : 1.5;
 
   useEffect(() => {
     const interval = setInterval(() => {
