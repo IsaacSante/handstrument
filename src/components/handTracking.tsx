@@ -28,11 +28,20 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     height: 0,
   });
 
+  // useEffect(() => {
+  //   console.log(videoDimensions);
+  // }, [videoDimensions]);
+
+  // useEffect(() => {
+  //   console.log(videoDimensions);
+  // }, [videoDimensions]);
+
   // buffer to calculate average pinch distance, like some easing
   const leftHandPinchBuffer = useRef(null);
   const rightHandPinchBuffer = useRef(null);
 
   useEffect(() => {
+    console.log(isMobile);
     async function setupHandTracking() {
       // Resolves the necessary resources for vision tasks
       const vision = await FilesetResolver.forVisionTasks(
@@ -57,12 +66,17 @@ const HandTracking: React.FC<HandTrackingProps> = ({
 
     function enableWebcam() {
       // Set up webcam constraints
-      const constraints = { video: true };
+      const dimensions = {
+        width: isMobile ? 320 : 640,
+        height: isMobile ? 240 : 480,
+      };
+
+      const constraints = { video: dimensions };
       navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
         if (videoRef.current) {
           videoRef.current.srcObject = stream;
           videoRef.current.addEventListener("loadeddata", () => {
-            if (videoRef.current) {
+            if (videoRef.current && typeof isMobile !== "undefined") {
               setVideoDimensions({
                 width: videoRef.current.videoWidth,
                 height: videoRef.current.videoHeight,
@@ -143,24 +157,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
 
     // Initiate the hand tracking setup
     setupHandTracking();
-  }, []);
-
-  useEffect(() => {
-    // Check if the user is accessing the page on a mobile device
-    const isMobile =
-      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      );
-
-    // Calculate the ratio for resizing the video dimensions
-    const ratio = isMobile ? 0.25 : 1; // Change this ratio as needed
-
-    // Update the video dimensions based on the calculated ratio
-    setVideoDimensions({
-      width: videoRef.current.videoWidth * ratio,
-      height: videoRef.current.videoHeight * ratio,
-    });
-  }, []);
+  }, [isMobile]);
 
   return (
     <div
