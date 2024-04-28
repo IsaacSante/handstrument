@@ -68,7 +68,7 @@ const useDetectPinch = (
   }
 
   const velocityMultiplier = 1000;
-  const pinchThreshold = isMobile ? 0.035 : 0.1;
+  const pinchThreshold = isMobile ? 0.07 : 0.1;
   const distance = calculateDistance(
     landmarks[indexFingerTipIndex],
     landmarks[thumbTipIndex]
