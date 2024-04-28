@@ -9,10 +9,6 @@ This is the first stage of such an app, starting off with drums and might expand
 
 ## Todo
 
-- Make sure its working on mobile.
-- Add a loading screen takes longer on mobile.
-- Debug online production drawing thing?
-
 ## Done
 
 - Import MediaPipe
@@ -29,6 +25,9 @@ This is the first stage of such an app, starting off with drums and might expand
 - Build UI to let people know if theyre hands are triggering.
 - Let people use notes for each hand.
 - Upload to netlify.
+- Debug online production drawing thing? (made my own drawing functions)
+- Add a loading screen takes longer on mobile.
+- Make sure its working on mobile.
 
 ## For future
 
