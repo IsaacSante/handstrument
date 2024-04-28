@@ -144,6 +144,9 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   return (
     <div
       style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
         position: "relative",
         width: `${videoDimensions.width}px`,
         height: `${videoDimensions.height}px`,
@@ -158,7 +161,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           top: 0,
           left: 0,
           transform: "scaleX(-1)",
-          width: "100%",
+          width: "100%", // Change this to your preferred width
           height: "auto",
           borderRadius: "25px",
         }}
@@ -169,7 +172,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           position: "absolute",
           top: 0,
           left: 0,
-          width: "100%",
+          width: "100%", // Change this to your preferred width
           height: "auto",
           borderRadius: "25px",
         }}

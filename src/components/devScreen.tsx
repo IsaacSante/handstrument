@@ -51,12 +51,12 @@ const DevScreen: React.FC<DevScreenProps> = ({
 
   return (
     <div>
-      <p>Left Hand Active: {leftHandActive.current.toString()}</p>
+      {/* <p>Left Hand Active: {leftHandActive.current.toString()}</p>
       <p>Left Hand Pinched: {leftHandPinched.current.toString()}</p>
       <p>Right Hand Active: {rightHandActive.current.toString()}</p>
       <p>Right Hand Pinched: {rightHandPinched.current.toString()}</p>
       <p>Right Hand Velocity: {velocities.rightVel}</p>
-      <p>Left Hand Velocity: {velocities.leftVel}</p>
+      <p>Left Hand Velocity: {velocities.leftVel}</p> */}
     </div>
   );
 };

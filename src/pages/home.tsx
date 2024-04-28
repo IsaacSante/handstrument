@@ -38,7 +38,14 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
               leftHandVel={leftHandVel}
             />
           ) : (
-            <InstrumentScreen />
+            <InstrumentScreen
+              leftHandActive={leftHandActive}
+              leftHandPinched={leftHandPinched}
+              rightHandActive={rightHandActive}
+              rightHandPinched={rightHandPinched}
+              rightHandVel={rightHandVel}
+              leftHandVel={leftHandVel}
+            />
           )}
         </div>
       </div>

@@ -13,9 +13,7 @@ const style: { containerMain: CSSProperties } = {
     alignItems: "center",
     maxWidth: "100%",
     height: "100vh",
-    padding: "0 10px",
-    paddingBottom: "5vh",
-    paddingTop: "5vh",
+    paddingTop: "15vh",
     margin: "auto",
   },
   // Define other styles here, ensuring to type them correctly
