@@ -1,7 +1,8 @@
 import Section from "./layout/section";
-import playNote from "../utils/tone/usePlaySong";
 import { useState, useEffect } from "react";
 import ProgressBar from "./ui/progressBar";
+import playKick from "../utils/tone/usePlayKick";
+import playSnare from "../utils/tone/usePlaySnare";
 
 type InstrumentUIProps = {
   leftHandActive: React.MutableRefObject<boolean>;
@@ -44,14 +45,18 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
 
       setVelocities({ leftVel: newLeftVel, rightVel: newRightVel });
 
-      if (
-        (newLeftVel > VELOCITY_THRESHOLD || newRightVel > VELOCITY_THRESHOLD) &&
-        currentTime - lastPlayed > COOLDOWN_PERIOD
-      ) {
-        playNote();
-        setLastPlayed(currentTime);
+      if (currentTime - lastPlayed > COOLDOWN_PERIOD) {
+        if (newLeftVel > VELOCITY_THRESHOLD) {
+          playSnare();
+          setLastPlayed(currentTime);
+        }
+
+        if (newRightVel > VELOCITY_THRESHOLD) {
+          playKick();
+          setLastPlayed(currentTime);
+        }
       }
-    }, 100); // Check every 100ms
+    }, 100);
 
     return () => {
       clearInterval(interval);
@@ -76,13 +81,15 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
       {values.leftHandPinchedVal || values.rightHandPinchedVal ? (
         <Section title="Move to trigger drum sound!">
           <ProgressBar
-            title="Left"
+            title="Left Hand"
+            subtitle="Snare Gain"
             targetNumber={velocities.leftVel}
             startRange={0}
             endRange={3}
           />
           <ProgressBar
-            title="Right"
+            title="Right Hand"
+            subtitle="Kick Gain"
             targetNumber={velocities.rightVel}
             startRange={0}
             endRange={3}

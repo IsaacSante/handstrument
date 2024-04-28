@@ -1,5 +1,6 @@
 interface ProgressBarProps {
   title: string;
+  subtitle: string;
   targetNumber: number;
   startRange: number;
   endRange: number;
@@ -7,6 +8,7 @@ interface ProgressBarProps {
 
 const ProgressBar: React.FC<ProgressBarProps> = ({
   title,
+  subtitle,
   targetNumber,
   startRange,
   endRange,
@@ -30,12 +32,30 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const percentage = calculatePercentage();
 
+  let color;
+  if (percentage < 33) {
+    color = "#98FB98"; // Pastel green
+  } else if (percentage < 67) {
+    color = "#ffc107"; // Gold
+  } else {
+    color = "#FF6347"; // Pastel red
+  }
+
   return (
     <div>
-      <h3>{title}</h3>
       <div
         style={{
-          height: "10px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <p>{title}</p>
+        <p>{subtitle}</p>
+      </div>
+      <div
+        style={{
+          height: "8px",
           width: "100%",
           backgroundColor: "#E1FFE4",
           borderRadius: "50px",
@@ -45,7 +65,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           style={{
             height: "100%",
             width: `${percentage}%`,
-            backgroundColor: "#ffc107",
+            backgroundColor: color,
             borderRadius: "inherit",
           }}
         />

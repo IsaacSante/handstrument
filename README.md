@@ -9,8 +9,6 @@ This is the first stage of such an app, starting off with drums and might expand
 
 ## Todo
 
-- New notes for each hand!
-- Build UI to let people know if theyre hands are triggering.
 - Let people use notes for each hand.
 - Make sure its working on mobile.
 - Upload to netlify and release today!
@@ -27,6 +25,8 @@ This is the first stage of such an app, starting off with drums and might expand
 - Import Tone or other music library.
 - Tie pinch to trigger drum sample.
 - Velocity pass a certain threshold triggers music.
+- New notes for each hand!
+- Build UI to let people know if theyre hands are triggering.
 
 ## For future
 
