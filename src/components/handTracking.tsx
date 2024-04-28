@@ -144,6 +144,23 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     setupHandTracking();
   }, []);
 
+  useEffect(() => {
+    // Check if the user is accessing the page on a mobile device
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
+
+    // Calculate the ratio for resizing the video dimensions
+    const ratio = isMobile ? 0.5 : 1; // Change this ratio as needed
+
+    // Update the video dimensions based on the calculated ratio
+    setVideoDimensions({
+      width: videoRef.current.videoWidth * ratio,
+      height: videoRef.current.videoHeight * ratio,
+    });
+  }, []);
+
   return (
     <div
       style={{
