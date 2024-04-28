@@ -2,6 +2,7 @@
 
 What if we could make music when we mimic instruments?
 Using ML and paying attention to certain hand gestures maybe we can!
+
 ![mimic](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdW10YjBjb3FmOGk0d2owNDB2Y2d4MXg1c2tqd2xrMTJ6azRjejhyeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wpu0lK7V0sSB3bsUdo/giphy.gif)
 
 This is the first stage of such an app, starting off with drums and might expand to other instruments in the future.
