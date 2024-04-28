@@ -23,6 +23,6 @@ const kick = new MembraneSynth({
 
 export default function playKick(note = "C1", duration = "8n") {
   // Trigger the attack and release of the kick drum sound
-  console.log(note);
+  //console.log(note);
   kick.triggerAttackRelease(note, duration);
 }
