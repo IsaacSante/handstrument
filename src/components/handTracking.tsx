@@ -1,6 +1,7 @@
 import {
   HandLandmarker,
   FilesetResolver,
+  // @ts-ignore
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.0";
 import React, { useEffect, useRef, useState } from "react";
 import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
