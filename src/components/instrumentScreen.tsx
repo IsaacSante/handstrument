@@ -33,7 +33,7 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
   });
 
   const VELOCITY_THRESHOLD: number = isMobile ? 0.05 : 1.5;
-  const COOLDOWN_PERIOD: number = isMobile ? 1000 : 300;
+  const COOLDOWN_PERIOD: number = isMobile ? 1000 : 800;
   const UPDATE_INTERVAL: number = isMobile ? 100 : 800;
 
   useEffect(() => {
@@ -82,14 +82,14 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
             subtitle="Snare Gain"
             targetNumber={velocities.leftVel}
             startRange={0}
-            endRange={isMobile ? 0.04 : 3}
+            endRange={VELOCITY_THRESHOLD + 0.25}
           />
           <ProgressBar
             title="Right Hand"
             subtitle="Kick Gain"
             targetNumber={velocities.rightVel}
             startRange={0}
-            endRange={isMobile ? 0.04 : 3}
+            endRange={VELOCITY_THRESHOLD + 0.25}
           />
         </Section>
       ) : (

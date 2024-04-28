@@ -6,6 +6,7 @@ import Layout from "../components/layout/layout";
 import NoteSelection from "../components/ui/noteSelection";
 import AudioPermissionButton from "../components/ui/audioPermissionButton";
 import { debounce } from "../utils/functions/debounce";
+import * as Tone from "tone";
 
 type HomeProps = {
   devMode?: boolean;
@@ -21,6 +22,13 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   const leftHandVel = useRef<number>(0);
   const [isMobile, setIsMobile] = useState(true);
   const [hasRendered, setHasRendered] = useState<boolean>(false);
+  const [audioStarted, setAudioStarted] = useState(false);
+
+  const startAudio = async () => {
+    await Tone.start();
+    console.log("audio is ready");
+    setAudioStarted(true);
+  };
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -73,19 +81,25 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
                 flexDirection: isMobile ? "column" : "row",
               }}
             >
-              <AudioPermissionButton />
-              <InstrumentScreen
-                note={selectedNote}
-                leftHandPinched={leftHandPinched}
-                rightHandPinched={rightHandPinched}
-                rightHandVel={rightHandVel}
-                leftHandVel={leftHandVel}
-                isMobile={isMobile}
-              />
-              <NoteSelection
-                onNoteChange={setSelectedNote}
-                isMobile={isMobile}
-              />
+              {!audioStarted && (
+                <AudioPermissionButton startAudio={startAudio} />
+              )}
+              {audioStarted && (
+                <>
+                  <InstrumentScreen
+                    note={selectedNote}
+                    leftHandPinched={leftHandPinched}
+                    rightHandPinched={rightHandPinched}
+                    rightHandVel={rightHandVel}
+                    leftHandVel={leftHandVel}
+                    isMobile={isMobile}
+                  />
+                  <NoteSelection
+                    onNoteChange={setSelectedNote}
+                    isMobile={isMobile}
+                  />
+                </>
+              )}
             </div>
           )}
         </div>
