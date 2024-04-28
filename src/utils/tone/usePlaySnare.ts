@@ -20,5 +20,6 @@ const snare = new NoiseSynth({
  */
 export default function playSnare(duration = "8n") {
   // Trigger the attack and release of the snare drum sound
+  console.log("SNARE");
   snare.triggerAttackRelease(duration);
 }
