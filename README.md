@@ -10,6 +10,8 @@ This is the first stage of such an app, starting off with drums and might expand
 ## Todo
 
 - Make sure its working on mobile.
+- Add a loading screen takes longer on mobile.
+- Debug online production drawing thing?
 
 ## Done
 
