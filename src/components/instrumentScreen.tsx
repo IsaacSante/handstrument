@@ -35,7 +35,7 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
     rightHandPinchedVal: false,
   });
 
-  const VELOCITY_THRESHOLD: number = isMobile ? 0.4 : 1.5;
+  const VELOCITY_THRESHOLD: number = isMobile ? 0.04 : 1.5;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -83,14 +83,14 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
             subtitle="Snare Gain"
             targetNumber={velocities.leftVel}
             startRange={0}
-            endRange={3}
+            endRange={isMobile ? 0.1 : 3}
           />
           <ProgressBar
             title="Right Hand"
             subtitle="Kick Gain"
             targetNumber={velocities.rightVel}
             startRange={0}
-            endRange={3}
+            endRange={isMobile ? 0.1 : 3}
           />
         </Section>
       ) : (
