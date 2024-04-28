@@ -13,9 +13,6 @@ type InstrumentUIProps = {
   isMobile: boolean;
 };
 
-const COOLDOWN_PERIOD: number = 300;
-const UPDATE_INTERVAL: number = 1000;
-
 const InstrumentScreen: React.FC<InstrumentUIProps> = ({
   note,
   leftHandPinched,
@@ -36,6 +33,8 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
   });
 
   const VELOCITY_THRESHOLD: number = isMobile ? 0.04 : 1.5;
+  const COOLDOWN_PERIOD: number = isMobile ? 700 : 300;
+  const UPDATE_INTERVAL: number = isMobile ? 200 : 800;
 
   useEffect(() => {
     const interval = setInterval(() => {
