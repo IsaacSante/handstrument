@@ -17,7 +17,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   const rightHandPinched = useRef<boolean>(false);
   const rightHandVel = useRef<number>(0);
   const leftHandVel = useRef<number>(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
 
   useEffect(() => {
     const checkIsMobile = () => {

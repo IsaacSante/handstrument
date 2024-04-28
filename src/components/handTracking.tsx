@@ -37,7 +37,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   const rightHandPinchBuffer = useRef(null);
 
   useEffect(() => {
-    console.log(isMobile);
+    if (isMobile === null || isMobile === undefined) return;
     async function setupHandTracking() {
       // Resolves the necessary resources for vision tasks
       const vision = await FilesetResolver.forVisionTasks(
