@@ -10,25 +10,12 @@ type HomeProps = {
 };
 
 const Home: React.FC<HomeProps> = ({ devMode = false }) => {
-  const debug = false;
-
   const leftHandActive = useRef<boolean>(false);
   const leftHandPinched = useRef<boolean>(false);
   const rightHandActive = useRef<boolean>(false);
   const rightHandPinched = useRef<boolean>(false);
   const rightHandVel = useRef<number>(0);
   const leftHandVel = useRef<number>(0);
-
-  if (devMode && debug) {
-    useEffect(() => {
-      const intervalId = setInterval(() => {
-        console.log("Left Hand Active:", leftHandActive.current);
-        console.log("Right Hand Active:", rightHandActive.current);
-      }, 1000); // Log every second
-
-      return () => clearInterval(intervalId); // Cleanup on unmount
-    }, []);
-  }
 
   return (
     <Layout>
@@ -42,7 +29,18 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
           rightHandVelocity={rightHandVel}
         />
         <div style={{ minHeight: "500px" }}>
-          {devMode ? <DevScreen /> : <InstrumentScreen />}
+          {devMode ? (
+            <DevScreen
+              leftHandActive={leftHandActive}
+              leftHandPinched={leftHandPinched}
+              rightHandActive={rightHandActive}
+              rightHandPinched={rightHandPinched}
+              rightHandVel={rightHandVel}
+              leftHandVel={leftHandVel}
+            />
+          ) : (
+            <InstrumentScreen />
+          )}
         </div>
       </div>
     </Layout>

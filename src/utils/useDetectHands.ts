@@ -64,9 +64,13 @@ const useDetectHands = ({
 
   if (!foundLeftHand) {
     leftHandActive.current = false;
+    leftHandPinched.current = false;
+    leftHandVelocity.current = 0;
   }
   if (!foundRightHand) {
     rightHandActive.current = false;
+    rightHandPinched.current = false;
+    rightHandVelocity.current = 0;
   }
 };
 

@@ -31,14 +31,15 @@ const useDetectPinch = (
   bufferRef: MutableRefObject<any>,
   handVelocity: MutableRefObject<number>
 ) => {
-  const bufferLength = 5;
+  const bufferLength = 10;
+  const velocityDecayRate = 0.9; // Decay rate per frame
 
   if (!bufferRef.current) {
     bufferRef.current = createBuffer(bufferLength);
   }
 
   const velocityMultiplier = 1000;
-  const pinchThreshold = 0.1;
+  const pinchThreshold = 0.2;
   const distance = calculateDistance(
     landmarks[indexFingerTipIndex],
     landmarks[thumbTipIndex]
@@ -48,10 +49,15 @@ const useDetectPinch = (
   bufferRef.current.push(isPinching);
 
   handPinched.current = bufferRef.current.isPinching();
+
   if (handPinched.current) {
     handVelocity.current =
       calculateVelocity(landmarks[6], handType) * velocityMultiplier;
     console.log(`${handType} hand velocity:`, handVelocity.current);
+  } else {
+    // Apply velocity decay when not pinching
+    handVelocity.current *= velocityDecayRate;
+    if (handVelocity.current < 0.01) handVelocity.current = 0; // Threshold to zero to avoid infinitesimal values
   }
 };
 
