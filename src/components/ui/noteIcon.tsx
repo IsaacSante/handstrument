@@ -23,7 +23,7 @@ const NoteIcon: React.FC<IProps> = ({ note, selectedNote, onChangeNote }) => {
     outline: "none",
     margin: "8px",
     transition: "background 0.3s ease",
-    touchAction: "manipulation", // Improve touch responsiveness
+    touchAction: "manipulation",
   };
 
   return (
