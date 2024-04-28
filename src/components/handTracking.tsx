@@ -63,8 +63,8 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     function enableWebcam() {
       // Set up webcam constraints
       const dimensions = {
-        width: isMobile ? 320 : 640,
-        height: isMobile ? 240 : 480,
+        width: isMobile ? 240 : 640,
+        height: isMobile ? 320 : 480,
       };
 
       const constraints = { video: dimensions };
