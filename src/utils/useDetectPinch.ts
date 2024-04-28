@@ -21,6 +21,31 @@ const calculateDistance = (point1: Landmark, point2: Landmark) => {
   const zDiff = point1.z - point2.z;
   return Math.sqrt(xDiff * xDiff + yDiff * yDiff + zDiff * zDiff);
 };
+interface DrawPointParams {
+  canvasCtx: CanvasRenderingContext2D;
+  x: number;
+  y: number;
+  isPinching: boolean;
+}
+
+const drawPoint = ({ canvasCtx, x, y, isPinching }: DrawPointParams) => {
+  const canvasWidth = canvasCtx.canvas.width;
+  const canvasHeight = canvasCtx.canvas.height;
+  const actualX = x * canvasWidth;
+  const actualY = y * canvasHeight;
+
+  // Begin path for new drawing
+  canvasCtx.beginPath();
+  canvasCtx.arc(actualX, actualY, isPinching ? 20 : 10, 0, 2 * Math.PI);
+
+  // Apply styles only if necessary
+  const newFillStyle = isPinching ? "red" : "blue";
+  if (canvasCtx.fillStyle !== newFillStyle) {
+    canvasCtx.fillStyle = newFillStyle;
+  }
+
+  canvasCtx.fill();
+};
 
 const useDetectPinch = (
   landmarks: Landmarks,
@@ -29,9 +54,12 @@ const useDetectPinch = (
   handType: "Left" | "Right",
   handPinched: MutableRefObject<boolean>,
   bufferRef: MutableRefObject<any>,
-  handVelocity: MutableRefObject<number>
+  handVelocity: MutableRefObject<number>,
+  canvasCtx: CanvasRenderingContext2D
 ) => {
-  const bufferLength = 15;
+  if (!canvasCtx) return;
+
+  const bufferLength = 5;
   const velocityDecayRate = 0.9;
 
   if (!bufferRef.current) {
@@ -39,7 +67,7 @@ const useDetectPinch = (
   }
 
   const velocityMultiplier = 1000;
-  const pinchThreshold = 0.2;
+  const pinchThreshold = 0.1;
   const distance = calculateDistance(
     landmarks[indexFingerTipIndex],
     landmarks[thumbTipIndex]
@@ -49,6 +77,13 @@ const useDetectPinch = (
   bufferRef.current.push(isPinching);
 
   handPinched.current = bufferRef.current.isPinching();
+
+  drawPoint({
+    canvasCtx,
+    x: landmarks[indexFingerTipIndex].x,
+    y: landmarks[indexFingerTipIndex].y,
+    isPinching: isPinching,
+  });
 
   if (handPinched.current) {
     handVelocity.current =
