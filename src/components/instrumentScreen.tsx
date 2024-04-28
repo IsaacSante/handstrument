@@ -32,8 +32,8 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
     rightHandPinchedVal: false,
   });
 
-  const VELOCITY_THRESHOLD: number = isMobile ? 1.0 : 1.5;
-  const COOLDOWN_PERIOD: number = isMobile ? 1000 : 800;
+  const VELOCITY_THRESHOLD: number = isMobile ? 0.8 : 1.5;
+  const COOLDOWN_PERIOD: number = isMobile ? 900 : 700;
   const UPDATE_INTERVAL: number = isMobile ? 100 : 800;
 
   useEffect(() => {

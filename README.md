@@ -12,7 +12,7 @@ This is the first stage of such an app, starting off with drums and might expand
 ## Done
 
 - Import MediaPipe
-- getting vision library via cdn @mediapipe/tasks-vision
+- Getting vision library via cdn @mediapipe/tasks-vision
 - Console logging finger values
 - Checking if left and right hand are present
 - Calculate pinch
@@ -30,6 +30,8 @@ This is the first stage of such an app, starting off with drums and might expand
 - Make sure its working on mobile.
 
 ## For future
+
+- Make a config.json to store threshold values for app.
 
 - Refactor refs to be in one state to make it simpler to mutate in child functions
 
