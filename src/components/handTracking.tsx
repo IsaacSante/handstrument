@@ -105,16 +105,16 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           // Draw hand landmarks and connections if results are available
           if (results && results.landmarks) {
             //console.log(JSON.stringify(results));
-            for (const landmarks of results.landmarks) {
-              drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
-                color: "#FF0000",
-                lineWidth: 5,
-              });
-              drawLandmarks(canvasCtx, landmarks, {
-                color: "#F5F5DC",
-                lineWidth: 2,
-              });
-            }
+            // for (const landmarks of results.landmarks) {
+            //   drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
+            //     color: "#FF0000",
+            //     lineWidth: 5,
+            //   });
+            //   drawLandmarks(canvasCtx, landmarks, {
+            //     color: "#F5F5DC",
+            //     lineWidth: 2,
+            //   });
+            // }
           }
 
           // Call the function to check if hands in frame
