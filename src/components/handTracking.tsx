@@ -146,6 +146,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
             leftHandPinchBuffer,
             leftHandVelocity,
             canvasCtx,
+            isMobile,
           });
 
           canvasCtx.restore();

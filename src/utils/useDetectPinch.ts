@@ -55,7 +55,8 @@ const useDetectPinch = (
   handPinched: MutableRefObject<boolean>,
   bufferRef: MutableRefObject<any>,
   handVelocity: MutableRefObject<number>,
-  canvasCtx: CanvasRenderingContext2D
+  canvasCtx: CanvasRenderingContext2D,
+  isMobile: boolean
 ) => {
   if (!canvasCtx) return;
 
@@ -67,13 +68,11 @@ const useDetectPinch = (
   }
 
   const velocityMultiplier = 1000;
-  const pinchThreshold = 0.1;
+  const pinchThreshold = isMobile ? 0.035 : 0.1;
   const distance = calculateDistance(
     landmarks[indexFingerTipIndex],
     landmarks[thumbTipIndex]
   );
-
-  console.log(distance);
 
   const isPinching = distance < pinchThreshold;
   bufferRef.current.push(isPinching);

@@ -14,6 +14,7 @@ interface UseDetectHandsParams {
   leftHandVelocity: MutableRefObject<number>; // Add this
   leftHandPinchBuffer: MutableRefObject<null | number[]>;
   canvasCtx: CanvasRenderingContext2D | null; // Add this new property
+  isMobile: boolean;
 }
 
 const useDetectHands = ({
@@ -28,6 +29,7 @@ const useDetectHands = ({
   leftHandPinchBuffer,
   leftHandVelocity,
   canvasCtx,
+  isMobile,
 }: UseDetectHandsParams): void => {
   let foundLeftHand = false;
   let foundRightHand = false;
@@ -50,7 +52,8 @@ const useDetectHands = ({
           rightHandPinched,
           rightHandPinchBuffer,
           rightHandVelocity,
-          canvasCtx
+          canvasCtx,
+          isMobile
         );
       } else if (hand.displayName === "Right") {
         foundLeftHand = true;
@@ -63,7 +66,8 @@ const useDetectHands = ({
           leftHandPinched,
           leftHandPinchBuffer,
           leftHandVelocity,
-          canvasCtx
+          canvasCtx,
+          isMobile
         );
       }
     }
