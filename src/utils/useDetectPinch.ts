@@ -53,7 +53,7 @@ const useDetectPinch = (
   if (handPinched.current) {
     handVelocity.current =
       calculateVelocity(landmarks[6], handType) * velocityMultiplier;
-    console.log(`${handType} hand velocity:`, handVelocity.current);
+    // console.log(`${handType} hand velocity:`, handVelocity.current);
   } else {
     // Apply velocity decay when not pinching
     handVelocity.current *= velocityDecayRate;

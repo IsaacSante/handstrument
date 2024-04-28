@@ -30,7 +30,7 @@ const Section: React.FC<SectionProps> = ({
 
   return (
     <div style={containerStyle}>
-      {title && <h2 style={titleStyle}>{title}</h2>}
+      {title && <h3 style={titleStyle}>{title}</h3>}
       {children}
     </div>
   );

@@ -50,7 +50,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
           alignItems: "center",
         }}
       >
-        <p>{title}</p>
+        <p>
+          <strong>{title}</strong>
+        </p>
         <p>{subtitle}</p>
       </div>
       <div

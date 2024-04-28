@@ -5,6 +5,7 @@ import playKick from "../utils/tone/usePlayKick";
 import playSnare from "../utils/tone/usePlaySnare";
 
 type InstrumentUIProps = {
+  note: string;
   leftHandActive: React.MutableRefObject<boolean>;
   leftHandPinched: React.MutableRefObject<boolean>;
   rightHandActive: React.MutableRefObject<boolean>;
@@ -13,10 +14,11 @@ type InstrumentUIProps = {
   leftHandVel: React.MutableRefObject<number>;
 };
 
-const VELOCITY_THRESHOLD: number = 2.0;
-const COOLDOWN_PERIOD: number = 200;
+const VELOCITY_THRESHOLD: number = 1.0;
+const COOLDOWN_PERIOD: number = 100;
 
 const InstrumentScreen: React.FC<InstrumentUIProps> = ({
+  note,
   leftHandActive,
   leftHandPinched,
   rightHandActive,
@@ -52,7 +54,7 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
         }
 
         if (newRightVel > VELOCITY_THRESHOLD) {
-          playKick();
+          playKick(note);
           setLastPlayed(currentTime);
         }
       }
@@ -71,7 +73,7 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
         rightHandActiveVal: rightHandActive.current,
         rightHandPinchedVal: rightHandPinched.current,
       });
-    }, 100);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, []);
@@ -99,7 +101,7 @@ const InstrumentScreen: React.FC<InstrumentUIProps> = ({
         <Section title="Play the drums with your hands">
           <div>
             Pinch your thumb and index finger. <br />
-            Starting moving while you pinch!
+            While keeping the pinch, move the finger.
           </div>
         </Section>
       )}
