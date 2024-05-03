@@ -8,6 +8,7 @@ import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import { HAND_CONNECTIONS } from "@mediapipe/hands";
 import useDetectHands from "../utils/useDetectHands";
 import { HandTrackingProps } from "../types/handTracking";
+import { useEffectStore } from "../../useEffectStore";
 
 const HandTracking: React.FC<HandTrackingProps> = ({
   leftHandActive,
@@ -32,9 +33,21 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     console.log(videoDimensions);
   }, [videoDimensions]);
 
-  // buffer to calculate average pinch distance, like some easing
-  const leftHandPinchBuffer = useRef(null);
-  const rightHandPinchBuffer = useRef(null);
+  const stateMapping = {
+    LeftX: "lowpass",
+    LeftY: "feedback",
+    RightX: "reverb",
+    RightY: " pitchShift",
+  };
+
+  function updateEffects(hand, x, y) {
+    const { setEffect } = useEffectStore.getState();
+    const handPrefix = hand === "Left" ? "Left" : "Right";
+
+    // Update the effects based on the hand and flipped coordinates
+    setEffect(stateMapping[`${handPrefix}X`], x);
+    setEffect(stateMapping[`${handPrefix}Y`], y);
+  }
 
   useEffect(() => {
     if (isMobile === null || isMobile === undefined) return;
@@ -115,35 +128,37 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           canvasCtx.scale(-1, 1); // Mirror the video feed
           canvasCtx.translate(-canvas.width, 0);
 
-          // Draw hand landmarks and connections if results are available
-          // if (results && results.landmarks) {
-          //   for (const landmarks of results.landmarks) {
-          //     drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {
-          //       color: "#FF0000",
-          //       lineWidth: 5,
-          //     });
-          //     drawLandmarks(canvasCtx, landmarks, {
-          //       color: "#F5F5DC",
-          //       lineWidth: 2,
-          //     });
-          //   }
-          // }
+          function getTargetCordinates(hand, landmarks) {
+            const targetIndex = 8;
+            const targetLandmark = landmarks[targetIndex];
 
-          // Call the function to check if hands in frame
-          useDetectHands({
-            handednesses: results.handednesses,
-            landmarks: results.landmarks,
-            rightHandActive,
-            rightHandPinched,
-            rightHandPinchBuffer,
-            rightHandVelocity,
-            leftHandActive,
-            leftHandPinched,
-            leftHandPinchBuffer,
-            leftHandVelocity,
-            canvasCtx,
-            isMobile,
-          });
+            if (targetLandmark) {
+              const flippedX = 1 - targetLandmark.x; // Inverting X as you seem to prefer flipped coordinates
+              const flippedY = 1 - targetLandmark.y; // Inverting Y
+              console.log(`${hand} hand index landmarks:`, {
+                x: flippedX,
+                y: flippedY,
+              });
+
+              // Update the effect values using the Zustand store
+              updateEffects(hand, flippedX, flippedY);
+            } else {
+              console.log(`${hand} hand missing landmark data`);
+            }
+          }
+
+          for (let i = 0; i < results.handednesses.length; i++) {
+            const handedness = results.handednesses[i];
+            if (handedness.length > 0) {
+              const hand = handedness[0]; // Assuming only one handedness per hand
+
+              if (hand.displayName === "Left" || hand.displayName === "Right") {
+                getTargetCordinates(hand.displayName, results.landmarks[i]);
+              }
+            } else {
+              console.log("No hand found.");
+            }
+          }
 
           canvasCtx.restore();
           // Request next frame processing

@@ -7,6 +7,8 @@ import NoteSelection from "../components/ui/noteSelection";
 import AudioPermissionButton from "../components/ui/audioPermissionButton";
 import { debounce } from "../utils/functions/debounce";
 import * as Tone from "tone";
+import PlayAudio from "../components/testing/playAudio";
+import playSnare from "../utils/tone/usePlaySnare";
 
 type HomeProps = {
   devMode?: boolean;
@@ -50,6 +52,11 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
     return null;
   }
 
+  const triggerAudio = () => {
+    console.log("playing sound");
+    playSnare();
+  };
+
   return (
     <Layout isMobile={isMobile}>
       <div style={{ position: "relative" }}>
@@ -62,7 +69,8 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
           rightHandVelocity={rightHandVel}
           isMobile={isMobile}
         />
-        <div style={{ minHeight: "500px" }}>
+        <PlayAudio onClick={triggerAudio} />
+        {/* <div style={{ minHeight: "500px" }}>
           {devMode ? (
             <DevScreen
               leftHandActive={leftHandActive}
@@ -102,7 +110,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
               )}
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     </Layout>
   );

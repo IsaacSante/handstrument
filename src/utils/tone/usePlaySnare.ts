@@ -1,9 +1,22 @@
-import { NoiseSynth } from "tone";
+import { useEffectStore } from "../../../useEffectStore";
+import {
+  Filter,
+  FeedbackDelay,
+  Reverb,
+  PitchShift,
+  NoiseSynth,
+  Destination,
+} from "tone";
+
+// Create the effects
+const feedbackDelay = new FeedbackDelay("8n", 0.5).toDestination();
+const reverb = new Reverb().toDestination();
+const pitchShift = new PitchShift().toDestination();
 
 // Create a new NoiseSynth instance optimized for snare drum sounds
 const snare = new NoiseSynth({
   noise: {
-    type: "white", // 'white' noise generates a classic snare drum sound
+    type: "white",
   },
   envelope: {
     attack: 0.005,
@@ -14,12 +27,30 @@ const snare = new NoiseSynth({
   },
 }).toDestination();
 
-/**
- * Function to play a snare drum sound.
- * @param {string} duration - The duration for which the drum is sounded, default is "8n".
- */
-export default function playSnare(duration = "8n") {
-  // Trigger the attack and release of the snare drum sound
+// Chain effects to the snare
+snare.chain(feedbackDelay, reverb, pitchShift, Destination);
+
+// Initialize previous state for comparison
+let prevState = useEffectStore.getState().effects;
+
+// Subscribe to store changes and apply effects dynamically
+useEffectStore.subscribe(() => {
+  const newState = useEffectStore.getState().effects;
+  // Check for changes in effects and update accordingly
+  if (newState.feedback !== prevState.feedback) {
+    feedbackDelay.wet.value = newState.feedback;
+  }
+  // if (newState.reverb !== prevState.reverb) {
+  //   reverb.wet.value = newState.reverb;
+  // }
+  // if (newState.pitchShift !== prevState.pitchShift) {
+  //   pitchShift.pitch = newState.pitchShift;
+  // }
+  // Update prevState for the next check
+  prevState = newState;
+});
+
+export default function playSnare(duration = "1n") {
   console.log("SNARE");
   snare.triggerAttackRelease(duration);
 }
