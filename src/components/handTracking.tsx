@@ -37,7 +37,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     LeftX: "lowpass",
     LeftY: "feedback",
     RightX: "reverb",
-    RightY: " pitchShift",
+    RightY: "shift",
   };
 
   function updateEffects(hand, x, y) {
@@ -135,10 +135,10 @@ const HandTracking: React.FC<HandTrackingProps> = ({
             if (targetLandmark) {
               const flippedX = 1 - targetLandmark.x; // Inverting X as you seem to prefer flipped coordinates
               const flippedY = 1 - targetLandmark.y; // Inverting Y
-              console.log(`${hand} hand index landmarks:`, {
-                x: flippedX,
-                y: flippedY,
-              });
+              // console.log(`${hand} hand index landmarks:`, {
+              //   x: flippedX,
+              //   y: flippedY,
+              // });
 
               // Update the effect values using the Zustand store
               updateEffects(hand, flippedX, flippedY);

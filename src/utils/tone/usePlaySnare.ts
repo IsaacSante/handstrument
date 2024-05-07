@@ -1,17 +1,11 @@
+const songUrl = "https://samplelib.com/lib/preview/mp3/sample-15s.mp3";
+
 import { useEffectStore } from "../../../useEffectStore";
-import {
-  Filter,
-  FeedbackDelay,
-  Reverb,
-  PitchShift,
-  NoiseSynth,
-  Destination,
-} from "tone";
+import { FeedbackDelay, Reverb, NoiseSynth, Destination } from "tone";
 
 // Create the effects
 const feedbackDelay = new FeedbackDelay("8n", 0.5).toDestination();
 const reverb = new Reverb().toDestination();
-const pitchShift = new PitchShift().toDestination();
 
 // Create a new NoiseSynth instance optimized for snare drum sounds
 const snare = new NoiseSynth({
@@ -28,7 +22,7 @@ const snare = new NoiseSynth({
 }).toDestination();
 
 // Chain effects to the snare
-snare.chain(feedbackDelay, reverb, pitchShift, Destination);
+snare.chain(feedbackDelay, reverb, Destination);
 
 // Initialize previous state for comparison
 let prevState = useEffectStore.getState().effects;
@@ -40,12 +34,9 @@ useEffectStore.subscribe(() => {
   if (newState.feedback !== prevState.feedback) {
     feedbackDelay.wet.value = newState.feedback;
   }
-  // if (newState.reverb !== prevState.reverb) {
-  //   reverb.wet.value = newState.reverb;
-  // }
-  // if (newState.pitchShift !== prevState.pitchShift) {
-  //   pitchShift.pitch = newState.pitchShift;
-  // }
+  if (newState.reverb !== prevState.reverb) {
+    reverb.wet.value = newState.reverb;
+  }
   // Update prevState for the next check
   prevState = newState;
 });

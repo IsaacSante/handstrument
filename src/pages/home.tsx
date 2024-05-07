@@ -1,21 +1,31 @@
 import React, { useRef, useState, useEffect } from "react";
 import HandTracking from "../components/handTracking";
-import InstrumentScreen from "../components/instrumentScreen";
-import DevScreen from "../components/devScreen";
 import Layout from "../components/layout/layout";
-import NoteSelection from "../components/ui/noteSelection";
-import AudioPermissionButton from "../components/ui/audioPermissionButton";
 import { debounce } from "../utils/functions/debounce";
-import * as Tone from "tone";
 import PlayAudio from "../components/testing/playAudio";
 import playSnare from "../utils/tone/usePlaySnare";
+import TestEffects from "../components/testing/testEffects";
+import playSong from "../utils/tone/usePlaySong";
+// import NoteSelection from "../components/ui/noteSelection";
+// import AudioPermissionButton from "../components/ui/audioPermissionButton";
+// import InstrumentScreen from "../components/instrumentScreen";
+// import DevScreen from "../components/devScreen";
 
 type HomeProps = {
   devMode?: boolean;
 };
 
 const Home: React.FC<HomeProps> = ({ devMode = false }) => {
-  const [selectedNote, setSelectedNote] = useState("C1");
+  // const [selectedNote, setSelectedNote] = useState("C1");
+
+  // const [audioStarted, setAudioStarted] = useState(false);
+
+  // const startAudio = async () => {
+  //   await Tone.start();
+  //   console.log("audio is ready");
+  //   setAudioStarted(true);
+  // };
+
   const leftHandActive = useRef<boolean>(false);
   const leftHandPinched = useRef<boolean>(false);
   const rightHandActive = useRef<boolean>(false);
@@ -24,13 +34,6 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   const leftHandVel = useRef<number>(0);
   const [isMobile, setIsMobile] = useState(true);
   const [hasRendered, setHasRendered] = useState<boolean>(false);
-  const [audioStarted, setAudioStarted] = useState(false);
-
-  const startAudio = async () => {
-    await Tone.start();
-    console.log("audio is ready");
-    setAudioStarted(true);
-  };
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -54,7 +57,8 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
 
   const triggerAudio = () => {
     console.log("playing sound");
-    playSnare();
+    let play = playSong;
+    play();
   };
 
   return (
@@ -70,6 +74,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
           isMobile={isMobile}
         />
         <PlayAudio onClick={triggerAudio} />
+        <TestEffects />
         {/* <div style={{ minHeight: "500px" }}>
           {devMode ? (
             <DevScreen
