@@ -41,13 +41,30 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   };
 
   function updateEffects(hand, x, y) {
-    const { setEffect } = useEffectStore.getState();
-    const handPrefix = hand === "Left" ? "Left" : "Right";
+    const { setTarget } = useEffectStore.getState();
+    // fliiping hands to correct for webcam switch
+    const handPrefix = hand === "Left" ? "Right" : "Left";
 
     // Update the effects based on the hand and flipped coordinates
-    setEffect(stateMapping[`${handPrefix}X`], x);
-    setEffect(stateMapping[`${handPrefix}Y`], y);
+    setTarget(stateMapping[`${handPrefix}X`], x);
+    setTarget(stateMapping[`${handPrefix}Y`], y);
   }
+
+  useEffect(() => {
+    let lastTime = Date.now();
+
+    function animate() {
+      const now = Date.now();
+      const deltaTime = (now - lastTime) / 500; // Convert ms to seconds
+      lastTime = now;
+
+      useEffectStore.getState().updateEffects(deltaTime);
+      requestAnimationFrame(animate);
+    }
+
+    requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animate);
+  }, []);
 
   useEffect(() => {
     if (isMobile === null || isMobile === undefined) return;
@@ -129,7 +146,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           canvasCtx.translate(-canvas.width, 0);
 
           function getTargetCordinates(hand, landmarks) {
-            const targetIndex = 8;
+            const targetIndex = 9;
             const targetLandmark = landmarks[targetIndex];
 
             if (targetLandmark) {
