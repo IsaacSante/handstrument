@@ -37,8 +37,8 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   const stateMapping = {
     LeftX: "lowpass",
     LeftY: "reverb",
-    RightX: "feedback",
-    RightY: "shift",
+    RightX: "shift",
+    RightY: "feedback",
   };
 
   // get cordinates and update them in the store
@@ -60,6 +60,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     // fliiping hands to correct for webcam switch
     const handPrefix = hand === "Left" ? "Right" : "Left";
     // Update the effects based on the hand and flipped coordinates
+    //  console.log(y);
     setTarget(stateMapping[`${handPrefix}X`], x);
     setTarget(stateMapping[`${handPrefix}Y`], y);
   }

@@ -24,13 +24,11 @@ useEffectStore.subscribe(() => {
   const newState = useEffectStore.getState().effects;
   // Validate and update pitch shift
   if (newState.shift !== prevState.shift) {
-    const clampedShift = clamp(newState.shift);
-    updatePitchShift(pitchShift, clampedShift);
+    updatePitchShift(pitchShift, newState.shift);
   }
   //  Validate and update feedback effect
   if (newState.feedback !== prevState.feedback) {
-    const clampedFeedback = clamp(newState.feedback);
-    updateFeedbackEffect(feedbackDelay, clampedFeedback);
+    updateFeedbackEffect(feedbackDelay, newState.feedback);
   }
   prevState = newState;
 });

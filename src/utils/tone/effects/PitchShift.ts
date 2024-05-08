@@ -10,8 +10,7 @@ export function updatePitchShift(PitchShift: PitchShift, newPitch: number) {
   if (newPitch == 0) {
     controlPitch = 0;
   } else {
-    controlPitch = mapRange(newPitch, -12, 12) * 2 - 1;
+    controlPitch = mapRange(newPitch, -12, 12) * 1.4;
   }
-  // console.log(controlPitch);
-  PitchShift.pitch = newPitch;
+  PitchShift.pitch = controlPitch;
 }

@@ -1,4 +1,6 @@
 import { FeedbackDelay } from "tone";
+import { mapRange } from "../../functions/map";
+import { clamp } from "../../functions/clamp";
 
 // Function to create and return a feedback delay effect with a dynamic note value
 export function createFeedbackDelay(note = "2n") {
@@ -14,8 +16,7 @@ export function updateFeedbackEffect(
   if (wetness == 0) {
     controlWetness = 0;
   } else {
-    controlWetness = wetness;
+    controlWetness = clamp(wetness * 1.2);
   }
-  console.log(controlWetness);
   feedbackDelay.wet.value = controlWetness;
 }

@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { lerp } from "./src/utils/functions/lerp";
 
+const lerpSpeed = 0.7;
+
 type EffectState = {
   effects: {
     shift: number;
@@ -48,8 +50,8 @@ export const useEffectStore = create<EffectState>((set, get) => ({
           acc[effectKey] = lerp(
             effects[effectKey],
             targets[effectKey],
-            deltaTime * 0.1
-          ); // Adjust the 0.1 factor to control the speed
+            deltaTime * lerpSpeed
+          );
           return acc;
         },
         { ...effects }
