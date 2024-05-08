@@ -36,10 +36,23 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   // initiate state mapping
   const stateMapping = {
     LeftX: "lowpass",
-    LeftY: "feedback",
-    RightX: "reverb",
+    LeftY: "reverb",
+    RightX: "feedback",
     RightY: "shift",
   };
+
+  // get cordinates and update them in the store
+  function getTargetCordinates(hand, landmarks) {
+    const targetIndex = 9;
+    const targetLandmark = landmarks[targetIndex];
+    if (targetLandmark) {
+      const flippedX = 1 - targetLandmark.x;
+      const flippedY = 1 - targetLandmark.y;
+      updateEffects(hand, flippedX, flippedY);
+    } else {
+      console.log(`${hand} hand missing landmark data`);
+    }
+  }
 
   // update effecs in zustand store depending on what hand data is coming in
   function updateEffects(hand, x, y) {
@@ -79,26 +92,13 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     }
   }
 
-  // get cordinates and update them in the store
-  function getTargetCordinates(hand, landmarks) {
-    const targetIndex = 9;
-    const targetLandmark = landmarks[targetIndex];
-    if (targetLandmark) {
-      const flippedX = 1 - targetLandmark.x;
-      const flippedY = 1 - targetLandmark.y;
-      updateEffects(hand, flippedX, flippedY);
-    } else {
-      console.log(`${hand} hand missing landmark data`);
-    }
-  }
-
   // pass the current time to zustand store to be able to lerp data
   useEffect(() => {
     let lastTime = Date.now();
 
     function animate() {
       const now = Date.now();
-      const deltaTime = (now - lastTime) / 500; // Convert ms to seconds
+      const deltaTime = (now - lastTime) / 1000;
       lastTime = now;
 
       useEffectStore.getState().updateEffects(deltaTime);

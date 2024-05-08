@@ -10,6 +10,12 @@ export function updateFeedbackEffect(
   feedbackDelay: FeedbackDelay,
   wetness: number
 ) {
-  //console.log(wetness);
-  feedbackDelay.wet.value = wetness;
+  let controlWetness;
+  if (wetness == 0) {
+    controlWetness = 0;
+  } else {
+    controlWetness = wetness;
+  }
+  console.log(controlWetness);
+  feedbackDelay.wet.value = controlWetness;
 }
