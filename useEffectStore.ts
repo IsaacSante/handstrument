@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { lerp } from "./src/utils/functions/lerp";
 
-const lerpSpeed = 0.7;
+const lerpSpeed = 0.3;
 
 type EffectState = {
   effects: {

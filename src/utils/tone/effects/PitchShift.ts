@@ -1,6 +1,6 @@
 import { PitchShift } from "tone";
 import { mapRange } from "../../functions/map";
-
+import { roundNum } from "../../functions/round";
 export function createPitchShift() {
   return new PitchShift(0).toDestination();
 }
@@ -12,5 +12,5 @@ export function updatePitchShift(PitchShift: PitchShift, newPitch: number) {
   } else {
     controlPitch = mapRange(newPitch, -12, 12) * 1.4;
   }
-  PitchShift.pitch = controlPitch;
+  PitchShift.pitch = roundNum(controlPitch);
 }

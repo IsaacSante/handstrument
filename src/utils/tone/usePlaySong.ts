@@ -5,16 +5,21 @@ import {
   updateFeedbackEffect,
 } from "./effects/FeedbackDelay";
 import { createPitchShift, updatePitchShift } from "./effects/PitchShift";
-import { clamp } from "../functions/clamp";
-
+import { createReverb, updateReverbEffect } from "./effects/Reverb";
 // init song and player
 const songUrl = "/afterHours.mp3";
 const player = new Player(songUrl);
 
 // Initialize the effects
-let feedbackDelay = createFeedbackDelay("8n");
-let pitchShift = createPitchShift();
-player.disconnect().connect(feedbackDelay).connect(pitchShift).toDestination();
+const feedbackDelay = createFeedbackDelay("8n");
+const pitchShift = createPitchShift();
+const reverb = createReverb();
+player
+  .disconnect()
+  .connect(pitchShift)
+  .connect(reverb)
+  .connect(feedbackDelay)
+  .toDestination();
 
 // Initialize previous state for comparison
 let prevState = useEffectStore.getState().effects;
@@ -29,6 +34,9 @@ useEffectStore.subscribe(() => {
   //  Validate and update feedback effect
   if (newState.feedback !== prevState.feedback) {
     updateFeedbackEffect(feedbackDelay, newState.feedback);
+  }
+  if (newState.reverb !== prevState.reverb) {
+    updateReverbEffect(reverb, newState.reverb);
   }
   prevState = newState;
 });

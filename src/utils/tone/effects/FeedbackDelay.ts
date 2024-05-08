@@ -1,7 +1,6 @@
 import { FeedbackDelay } from "tone";
-import { mapRange } from "../../functions/map";
 import { clamp } from "../../functions/clamp";
-
+import { roundNum } from "../../functions/round";
 // Function to create and return a feedback delay effect with a dynamic note value
 export function createFeedbackDelay(note = "2n") {
   return new FeedbackDelay(note, 0).toDestination();
@@ -18,5 +17,5 @@ export function updateFeedbackEffect(
   } else {
     controlWetness = clamp(wetness * 1.2);
   }
-  feedbackDelay.wet.value = controlWetness;
+  feedbackDelay.wet.value = roundNum(controlWetness);
 }
