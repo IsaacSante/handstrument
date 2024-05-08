@@ -33,6 +33,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     console.log(videoDimensions);
   }, [videoDimensions]);
 
+  // initiate state mapping
   const stateMapping = {
     LeftX: "lowpass",
     LeftY: "feedback",
@@ -40,16 +41,58 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     RightY: "shift",
   };
 
+  // update effecs in zustand store depending on what hand data is coming in
   function updateEffects(hand, x, y) {
     const { setTarget } = useEffectStore.getState();
     // fliiping hands to correct for webcam switch
     const handPrefix = hand === "Left" ? "Right" : "Left";
-
     // Update the effects based on the hand and flipped coordinates
     setTarget(stateMapping[`${handPrefix}X`], x);
     setTarget(stateMapping[`${handPrefix}Y`], y);
   }
 
+  function resetHandEffects(hand) {
+    const { resetValue } = useEffectStore.getState();
+    const handPrefix = hand === "Left" ? "Right" : "Left";
+    resetValue(stateMapping[`${handPrefix}X`]);
+    resetValue(stateMapping[`${handPrefix}Y`]);
+  }
+
+  function processResults(results) {
+    const foundHands = { Left: false, Right: false };
+
+    for (let i = 0; i < results.handednesses.length; i++) {
+      const handedness = results.handednesses[i];
+      if (handedness.length > 0) {
+        const hand = handedness[0]; // Assuming only one handedness per hand
+        foundHands[hand.displayName] = true;
+        getTargetCordinates(hand.displayName, results.landmarks[i]);
+      }
+    }
+
+    // Reset the effects for any hand not found
+    if (!foundHands.Left) {
+      resetHandEffects("Left");
+    }
+    if (!foundHands.Right) {
+      resetHandEffects("Right");
+    }
+  }
+
+  // get cordinates and update them in the store
+  function getTargetCordinates(hand, landmarks) {
+    const targetIndex = 9;
+    const targetLandmark = landmarks[targetIndex];
+    if (targetLandmark) {
+      const flippedX = 1 - targetLandmark.x;
+      const flippedY = 1 - targetLandmark.y;
+      updateEffects(hand, flippedX, flippedY);
+    } else {
+      console.log(`${hand} hand missing landmark data`);
+    }
+  }
+
+  // pass the current time to zustand store to be able to lerp data
   useEffect(() => {
     let lastTime = Date.now();
 
@@ -144,40 +187,9 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
           canvasCtx.scale(-1, 1); // Mirror the video feed
           canvasCtx.translate(-canvas.width, 0);
-
-          function getTargetCordinates(hand, landmarks) {
-            const targetIndex = 9;
-            const targetLandmark = landmarks[targetIndex];
-
-            if (targetLandmark) {
-              const flippedX = 1 - targetLandmark.x; // Inverting X as you seem to prefer flipped coordinates
-              const flippedY = 1 - targetLandmark.y; // Inverting Y
-              // console.log(`${hand} hand index landmarks:`, {
-              //   x: flippedX,
-              //   y: flippedY,
-              // });
-
-              // Update the effect values using the Zustand store
-              updateEffects(hand, flippedX, flippedY);
-            } else {
-              console.log(`${hand} hand missing landmark data`);
-            }
-          }
-
-          for (let i = 0; i < results.handednesses.length; i++) {
-            const handedness = results.handednesses[i];
-            if (handedness.length > 0) {
-              const hand = handedness[0]; // Assuming only one handedness per hand
-
-              if (hand.displayName === "Left" || hand.displayName === "Right") {
-                getTargetCordinates(hand.displayName, results.landmarks[i]);
-              }
-            } else {
-              console.log("No hand found.");
-            }
-          }
-
           canvasCtx.restore();
+          // handle results
+          processResults(results);
           // Request next frame processing
           requestAnimationFrame(predictWebcam);
         }

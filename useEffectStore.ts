@@ -16,6 +16,7 @@ type EffectState = {
   };
   setTarget: (key: keyof EffectState["effects"], value: number) => void;
   updateEffects: (deltaTime: number) => void;
+  resetValue: (key: keyof EffectState["effects"]) => void;
 };
 
 export const useEffectStore = create<EffectState>((set, get) => ({
@@ -55,4 +56,15 @@ export const useEffectStore = create<EffectState>((set, get) => ({
       ),
     });
   },
+  resetValue: (key) =>
+    set((state) => ({
+      effects: {
+        ...state.effects,
+        [key]: 0,
+      },
+      targets: {
+        ...state.targets,
+        [key]: 0,
+      },
+    })),
 }));

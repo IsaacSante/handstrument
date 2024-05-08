@@ -6,7 +6,7 @@ export function createPitchShift() {
 }
 
 export function updatePitchShift(PitchShift: PitchShift, newPitch: number) {
-  const mappedPitch = mapRange(newPitch, -12, 12);
-  //console.log(newPitch);
+  const mappedPitch = mapRange(newPitch, -12, 12) * 2;
+  console.log(mappedPitch);
   PitchShift.pitch = mappedPitch;
 }
