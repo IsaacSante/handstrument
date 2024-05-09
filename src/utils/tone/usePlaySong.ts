@@ -1,5 +1,5 @@
 import { useEffectStore } from "../../../useEffectStore";
-import { Player } from "tone";
+import { Player, Analyser } from "tone";
 import {
   createFeedbackDelay,
   updateFeedbackEffect,
