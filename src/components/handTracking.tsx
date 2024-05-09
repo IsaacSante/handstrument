@@ -37,22 +37,19 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     return ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
   }
 
-  function drawOnCanvas(ctx, canvas, video) {
-    // Save the current context state (important for resetting later)
+  function drawOnCanvas(ctx, canvas, video, leftHandX = 0, rightHandX = 1) {
     ctx.save();
-
-    // Flip the canvas context horizontally
-    ctx.scale(-1, 1);
-    ctx.translate(-canvas.width, 0);
-
-    // Draw the video frame flipped
+    ctx.scale(-1, 1); // Flipping the canvas horizontally
+    ctx.translate(-canvas.width, 0); // Adjust for the flipped scale
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Get the image data
-    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    let pixels = imageData.data;
-    let hypoteticalX = 0; // Assuming this is meant to track mouseX or similar
-    let stepSize = Math.floor(map(hypoteticalX, 0, canvas.width, 5, 20));
+    const newLeft = leftHandX * canvas.width; // Scale the hand X position to canvas width
+    // Ensure stepSize scales correctly from 5 to 20 based on the X position
+    const stepSize = Math.floor(map(newLeft, 0, canvas.width, 50, 10));
+
+    console.log("Step Size:", stepSize);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const pixels = imageData.data;
 
     for (let y = 0; y < canvas.height; y += stepSize) {
       for (let x = 0; x < canvas.width; x += stepSize) {
@@ -60,17 +57,12 @@ const HandTracking: React.FC<HandTrackingProps> = ({
         let redVal = pixels[index];
         let greenVal = pixels[index + 1];
         let blueVal = pixels[index + 2];
-
-        // To correctly fill flipped, recalculate the x position
+        // Adjust x for the drawing to account for flipped canvas
         let flippedX = canvas.width - x - stepSize;
-
-        // Use the flipped x position for drawing
-        ctx.fillStyle = `rgb(${2 * redVal}, ${greenVal}, ${blueVal / 2})`;
-        ctx.fillRect(flippedX, y - stepSize / 2, stepSize, stepSize);
+        ctx.fillStyle = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
+        ctx.fillRect(flippedX, y, stepSize, stepSize); // Correct the Y position as well
       }
     }
-
-    // Restore the context to its original state
     ctx.restore();
   }
 
@@ -83,15 +75,29 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   };
 
   // get cordinates and update them in the store
+  // pass them to the draw function on the canvas
   function getTargetCordinates(hand, landmarks) {
+    let leftX = 0;
+    let rightX = 2;
+
     const targetIndex = 9;
     const targetLandmark = landmarks[targetIndex];
     if (targetLandmark) {
       const flippedX = 1 - targetLandmark.x;
       const flippedY = 1 - targetLandmark.y;
       updateEffects(hand, flippedX, flippedY);
+      if (hand === "Left") {
+        leftX = flippedX;
+      } else {
+        rightX = flippedX;
+      }
     } else {
       console.log(`${hand} hand missing landmark data`);
+    }
+
+    if (canvasRef.current && videoRef.current) {
+      const ctx = canvasRef.current.getContext("2d");
+      drawOnCanvas(ctx, canvasRef.current, videoRef.current, leftX, rightX);
     }
   }
 
@@ -211,9 +217,6 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           canvasCtx.scale(-1, 1); // Mirror the video feed
           canvasCtx.translate(-canvas.width, 0);
           canvasCtx.restore();
-          // Vizualizer
-          drawOnCanvas(canvasCtx, canvas, video);
-
           // handle results
           processResults(results);
           // Request next frame processing

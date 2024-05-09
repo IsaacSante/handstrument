@@ -61,7 +61,6 @@ const TestEffects: React.FC = () => {
 
   return (
     <div>
-      <h3>Effects</h3>
       <div>
         {Object.entries(displayEffects).map(([key, value]) => {
           // Determine the range based on the key
