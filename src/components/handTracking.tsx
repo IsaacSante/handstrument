@@ -33,6 +33,47 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     console.log(videoDimensions);
   }, [videoDimensions]);
 
+  function map(value, x1, y1, x2, y2) {
+    return ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
+  }
+
+  function drawOnCanvas(ctx, canvas, video) {
+    // Save the current context state (important for resetting later)
+    ctx.save();
+
+    // Flip the canvas context horizontally
+    ctx.scale(-1, 1);
+    ctx.translate(-canvas.width, 0);
+
+    // Draw the video frame flipped
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Get the image data
+    let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    let pixels = imageData.data;
+    let hypoteticalX = 0; // Assuming this is meant to track mouseX or similar
+    let stepSize = Math.floor(map(hypoteticalX, 0, canvas.width, 5, 20));
+
+    for (let y = 0; y < canvas.height; y += stepSize) {
+      for (let x = 0; x < canvas.width; x += stepSize) {
+        let index = (x + y * canvas.width) * 4;
+        let redVal = pixels[index];
+        let greenVal = pixels[index + 1];
+        let blueVal = pixels[index + 2];
+
+        // To correctly fill flipped, recalculate the x position
+        let flippedX = canvas.width - x - stepSize;
+
+        // Use the flipped x position for drawing
+        ctx.fillStyle = `rgb(${2 * redVal}, ${greenVal}, ${blueVal / 2})`;
+        ctx.fillRect(flippedX, y - stepSize / 2, stepSize, stepSize);
+      }
+    }
+
+    // Restore the context to its original state
+    ctx.restore();
+  }
+
   // initiate state mapping
   const stateMapping = {
     LeftX: "reverb",
@@ -90,23 +131,6 @@ const HandTracking: React.FC<HandTrackingProps> = ({
       resetHandEffects("Right");
     }
   }
-
-  // pass the current time to zustand store to be able to lerp data
-  // useEffect(() => {
-  //   let lastTime = Date.now();
-
-  //   function animate() {
-  //     const now = Date.now();
-  //     const deltaTime = (now - lastTime) / 1000;
-  //     lastTime = now;
-
-  //     useEffectStore.getState().updateEffects(deltaTime);
-  //     requestAnimationFrame(animate);
-  //   }
-
-  //   requestAnimationFrame(animate);
-  //   return () => cancelAnimationFrame(animate);
-  // }, []);
 
   useEffect(() => {
     if (isMobile === null || isMobile === undefined) return;
@@ -187,6 +211,9 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           canvasCtx.scale(-1, 1); // Mirror the video feed
           canvasCtx.translate(-canvas.width, 0);
           canvasCtx.restore();
+          // Vizualizer
+          drawOnCanvas(canvasCtx, canvas, video);
+
           // handle results
           processResults(results);
           // Request next frame processing

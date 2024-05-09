@@ -3,14 +3,14 @@ import { create } from "zustand";
 type EffectState = {
   effects: {
     shift: number;
-    tremolo: number;
     feedback: number;
+    tremolo: number;
     reverb: number;
   };
   targets: {
     shift: number;
-    tremolo: number;
     feedback: number;
+    tremolo: number;
     reverb: number;
   };
   setTarget: (key: keyof EffectState["effects"], value: number) => void;
@@ -20,14 +20,14 @@ type EffectState = {
 export const useEffectStore = create<EffectState>((set, get) => ({
   effects: {
     shift: 0,
-    tremolo: 0,
     feedback: 0,
+    tremolo: 0,
     reverb: 0,
   },
   targets: {
     shift: 0,
-    tremolo: 0,
     feedback: 0,
+    tremolo: 0,
     reverb: 0,
   },
   setTarget: (key, value) =>

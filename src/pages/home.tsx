@@ -6,6 +6,7 @@ import PlayAudio from "../components/testing/playAudio";
 import playSnare from "../utils/tone/usePlaySnare";
 import TestEffects from "../components/testing/testEffects";
 import playSong from "../utils/tone/usePlaySong";
+import AudioPermissionButton from "../components/ui/audioPermissionButton";
 // import NoteSelection from "../components/ui/noteSelection";
 // import AudioPermissionButton from "../components/ui/audioPermissionButton";
 // import InstrumentScreen from "../components/instrumentScreen";
@@ -18,7 +19,7 @@ type HomeProps = {
 const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   // const [selectedNote, setSelectedNote] = useState("C1");
 
-  // const [audioStarted, setAudioStarted] = useState(false);
+  const [audioStarted, setAudioStarted] = useState(false);
 
   // const startAudio = async () => {
   //   await Tone.start();
@@ -59,6 +60,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
     console.log("playing sound");
     let play = playSong;
     play();
+    setAudioStarted(true);
   };
 
   return (
@@ -73,7 +75,8 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
           rightHandVelocity={rightHandVel}
           isMobile={isMobile}
         />
-        <PlayAudio onClick={triggerAudio} />
+        {!audioStarted && <AudioPermissionButton startAudio={triggerAudio} />}
+        {/* <PlayAudio onClick={triggerAudio} /> */}
         <TestEffects />
         {/* <div style={{ minHeight: "500px" }}>
           {devMode ? (

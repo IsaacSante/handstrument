@@ -36,7 +36,7 @@ const AudioPermissionButton: React.FC<AudioPermissionButtonProps> = ({
 
   return (
     <button style={buttonStyle} onClick={startAudio}>
-      <p>Click to enable audio</p>
+      <p>Start Audio</p>
     </button>
   );
 };
