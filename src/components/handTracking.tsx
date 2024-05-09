@@ -36,7 +36,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   // initiate state mapping
   const stateMapping = {
     LeftX: "reverb",
-    LeftY: "lowpass",
+    LeftY: "tremolo",
     RightX: "shift",
     RightY: "feedback",
   };
@@ -92,21 +92,21 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   }
 
   // pass the current time to zustand store to be able to lerp data
-  useEffect(() => {
-    let lastTime = Date.now();
+  // useEffect(() => {
+  //   let lastTime = Date.now();
 
-    function animate() {
-      const now = Date.now();
-      const deltaTime = (now - lastTime) / 1000;
-      lastTime = now;
+  //   function animate() {
+  //     const now = Date.now();
+  //     const deltaTime = (now - lastTime) / 1000;
+  //     lastTime = now;
 
-      useEffectStore.getState().updateEffects(deltaTime);
-      requestAnimationFrame(animate);
-    }
+  //     useEffectStore.getState().updateEffects(deltaTime);
+  //     requestAnimationFrame(animate);
+  //   }
 
-    requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animate);
-  }, []);
+  //   requestAnimationFrame(animate);
+  //   return () => cancelAnimationFrame(animate);
+  // }, []);
 
   useEffect(() => {
     if (isMobile === null || isMobile === undefined) return;

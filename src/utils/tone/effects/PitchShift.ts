@@ -12,5 +12,6 @@ export function updatePitchShift(PitchShift: PitchShift, newPitch: number) {
   } else {
     controlPitch = mapRange(newPitch, -12, 12) * 1.4;
   }
-  PitchShift.pitch = roundNum(controlPitch);
+  let targetWetness = roundNum(controlPitch);
+  PitchShift.pitch = targetWetness;
 }

@@ -12,5 +12,6 @@ export function updateReverbEffect(reverb: Reverb, wetness: number) {
   } else {
     controlWetness = clamp(wetness * 1.2);
   }
-  reverb.wet.value = roundNum(controlWetness);
+  let targetWetness = roundNum(controlWetness);
+  reverb.wet.rampTo(targetWetness, 0.1);
 }

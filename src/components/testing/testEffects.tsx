@@ -7,13 +7,13 @@ import ProgressBar from "../ui/progressBar";
 // Define a type for the effects to specify the structure and types
 type Effects = {
   shift: number;
-  lowpass: number;
+  tremolo: number;
   feedback: number;
   reverb: number;
 };
 
 const TestEffects: React.FC = () => {
-  const effectsRef = useRef<Effects>(useEffectStore.getState().effects); // useRef with type
+  const effectsRef = useRef<Effects>(useEffectStore.getState().targets); // useRef with type
   const [effects, setEffects] = useState<Effects>(effectsRef.current); // useState with type
   const [displayEffects, setDisplayEffects] = useState<Effects>(effects); // useState with type for transformed effects
 
@@ -28,7 +28,7 @@ const TestEffects: React.FC = () => {
               mapRange(effectValue, -12, 12)
             );
             break;
-          case "lowpass":
+          case "tremolo":
             acc[key as keyof Effects] = roundNum(effectValue);
             break;
           case "feedback":
@@ -48,7 +48,7 @@ const TestEffects: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = useEffectStore.subscribe(() => {
-      const newEffects = useEffectStore.getState().effects;
+      const newEffects = useEffectStore.getState().targets;
       if (effectsRef.current !== newEffects) {
         effectsRef.current = newEffects; // Update the ref
         setEffects(newEffects); // Update state if actual changes occur
