@@ -2,8 +2,6 @@ import React, { useRef, useState, useEffect } from "react";
 import HandTracking from "../components/handTracking";
 import Layout from "../components/layout/layout";
 import { debounce } from "../utils/functions/debounce";
-import PlayAudio from "../components/testing/playAudio";
-import playSnare from "../utils/tone/usePlaySnare";
 import TestEffects from "../components/testing/testEffects";
 import playSong from "../utils/tone/usePlaySong";
 import AudioPermissionButton from "../components/ui/audioPermissionButton";
@@ -46,7 +44,6 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   }
 
   const triggerAudio = () => {
-    console.log("playing sound");
     let play = playSong;
     play(analyserRef.current);
     setAudioStarted(true);
@@ -65,8 +62,8 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
           rightHandVelocity={rightHandVel}
           isMobile={isMobile}
         />
-        {!audioStarted && <AudioPermissionButton startAudio={triggerAudio} />}
         <TestEffects />
+        {!audioStarted && <AudioPermissionButton startAudio={triggerAudio} />}
       </div>
     </Layout>
   );

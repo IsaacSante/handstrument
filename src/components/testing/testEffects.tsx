@@ -4,7 +4,7 @@ import { clamp } from "../../utils/functions/clamp";
 import { roundNum } from "../../utils/functions/round";
 import { mapRange } from "../../utils/functions/map";
 import ProgressBar from "../ui/progressBar";
-// Define a type for the effects to specify the structure and types
+
 type Effects = {
   shift: number;
   tremolo: number;
@@ -60,9 +60,11 @@ const TestEffects: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ marginBottom: "20px" }}>
       <div>
         {Object.entries(displayEffects).map(([key, value]) => {
+          if (key === "reverb") return null; // Skip rendering for "reverb"
+
           // Determine the range based on the key
           let min = 0;
           let max = 1;
@@ -70,7 +72,14 @@ const TestEffects: React.FC = () => {
             min = -12;
             max = 12;
           }
-
+          if (key === "tremolo") {
+            key = "audio reactive";
+            min = 0;
+            max = 0.1;
+            if (value > 0) {
+              value = 1;
+            }
+          }
           return (
             <div key={key}>
               <ProgressBar

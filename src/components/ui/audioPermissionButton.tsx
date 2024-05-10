@@ -29,7 +29,7 @@ const AudioPermissionButton: React.FC<AudioPermissionButtonProps> = ({
     fontWeight: "bold",
     cursor: "pointer",
     outline: "none",
-    margin: "8px",
+    margin: "12px",
     transition: "background 0.3s ease",
     touchAction: "manipulation", // Improve touch responsiveness
   };

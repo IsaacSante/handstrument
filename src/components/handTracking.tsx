@@ -59,7 +59,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     // Adjust the multiplier based on both hands
     let multi = 1;
     if (newRms > 0.0 && newRightX > 0) {
-      multi = map(newRms, 0.01, 0.1, 0.5, 1);
+      multi = map(newRms, 0.01, 0.1, 0, 1) * newRightX;
     }
     const stepSizeX = Math.floor(map(newLeftX, 0, canvas.width, 10, 20));
     const stepSizeY = Math.floor(
