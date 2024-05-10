@@ -9,8 +9,10 @@ import { HAND_CONNECTIONS } from "@mediapipe/hands";
 import useDetectHands from "../utils/useDetectHands";
 import { HandTrackingProps } from "../types/handTracking";
 import { useEffectStore } from "../../useEffectStore";
+import { getPowerOfSignalAndUpdateStore } from "../utils/tone/getRms";
 
 const HandTracking: React.FC<HandTrackingProps> = ({
+  analyser,
   leftHandActive,
   rightHandActive,
   leftHandPinched,
@@ -37,42 +39,44 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     return ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
   }
 
-  function drawOnCanvas(
-    ctx,
-    canvas,
-    video,
-    leftHandX = 0,
-    rightHandX = 1,
-    leftHandY = 0,
-    rightHandY = 1
-  ) {
+  function drawOnCanvas(ctx, canvas, video) {
+    const { targets } = useEffectStore.getState(); // Access the current state
+
     ctx.save();
     ctx.scale(-1, 1); // Flipping the canvas horizontally
     ctx.translate(-canvas.width, 0); // Adjust for the flipped scale
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    const newLeftX = leftHandX * canvas.width; // Scale the hand X position to canvas width
-    const newLeftY = leftHandY * canvas.height; // Scale the hand Y position to canvas height
-    // Ensure stepSize scales correctly from 5 to 20 based on the X position
-    const stepSizeX = Math.floor(map(newLeftX, 0, canvas.width, 30, 4));
-    const stepSizeY = Math.floor(
-      map(newLeftY, 0, canvas.height, stepSizeX, stepSizeX * 1.5)
-    ); // Variable height
-
+    const newLeftX = targets.shift * canvas.width;
+    const newRightX = targets.tremolo * canvas.width;
+    const newLeftY = targets.feedback * canvas.height;
+    const newRightY = targets.reverb * canvas.height;
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const pixels = imageData.data;
 
+    const newRms = getPowerOfSignalAndUpdateStore(analyser);
+
+    // Adjust the multiplier based on both hands
+    let multi = 1;
+    if (newRms > 0.0 && newRightX > 0) {
+      multi = map(newRms, 0.01, 0.1, 0.5, 1);
+    }
+    const stepSizeX = Math.floor(map(newLeftX, 0, canvas.width, 10, 20));
+    const stepSizeY = Math.floor(
+      map(newLeftY, 0, canvas.height, stepSizeX, stepSizeX * 2)
+    );
+
     for (let y = 0; y < canvas.height; y += stepSizeY) {
-      // Use variable height for loop increment
       for (let x = 0; x < canvas.width; x += stepSizeX) {
         let index = (x + y * canvas.width) * 4;
         let redVal = pixels[index];
         let greenVal = pixels[index + 1];
         let blueVal = pixels[index + 2];
-        // Adjust x for the drawing to account for flipped canvas
         let flippedX = canvas.width - x - stepSizeX;
-        ctx.fillStyle = `rgb(${redVal}, ${greenVal}, ${blueVal})`;
-        ctx.fillRect(flippedX, y, stepSizeX, stepSizeY); // Use variable height
+        ctx.fillStyle = `rgb(${redVal * multi}, ${greenVal * multi}, ${
+          blueVal * multi
+        })`;
+        ctx.fillRect(flippedX, y, stepSizeX, stepSizeY);
       }
     }
     ctx.restore();
@@ -89,39 +93,19 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   // get cordinates and update them in the store
   // pass them to the draw function on the canvas
   function getTargetCordinates(hand, landmarks) {
-    let leftX = 0;
-    let rightX = 2;
-    let leftY = 0;
-    let rightY = 2;
-
     const targetIndex = 9;
     const targetLandmark = landmarks[targetIndex];
     if (targetLandmark) {
       const flippedX = 1 - targetLandmark.x;
       const flippedY = 1 - targetLandmark.y;
       updateEffects(hand, flippedX, flippedY);
-      if (hand === "Left") {
-        leftX = flippedX;
-        leftY = flippedY;
-      } else {
-        rightX = flippedX;
-        rightY = flippedY;
-      }
     } else {
       console.log(`${hand} hand missing landmark data`);
     }
 
     if (canvasRef.current && videoRef.current) {
       const ctx = canvasRef.current.getContext("2d");
-      drawOnCanvas(
-        ctx,
-        canvasRef.current,
-        videoRef.current,
-        leftX,
-        rightX,
-        leftY,
-        rightY
-      );
+      drawOnCanvas(ctx, canvasRef.current, videoRef.current);
     }
   }
 

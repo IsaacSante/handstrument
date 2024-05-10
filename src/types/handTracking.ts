@@ -1,4 +1,6 @@
+import { Analyser } from "tone";
 export type HandTrackingProps = {
+  analyser: Analyser;
   leftHandActive: React.MutableRefObject<boolean>;
   rightHandActive: React.MutableRefObject<boolean>;
   leftHandPinched: React.MutableRefObject<boolean>;

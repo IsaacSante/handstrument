@@ -7,26 +7,14 @@ import playSnare from "../utils/tone/usePlaySnare";
 import TestEffects from "../components/testing/testEffects";
 import playSong from "../utils/tone/usePlaySong";
 import AudioPermissionButton from "../components/ui/audioPermissionButton";
-// import NoteSelection from "../components/ui/noteSelection";
-// import AudioPermissionButton from "../components/ui/audioPermissionButton";
-// import InstrumentScreen from "../components/instrumentScreen";
-// import DevScreen from "../components/devScreen";
+import { Analyser } from "tone";
 
 type HomeProps = {
   devMode?: boolean;
 };
 
 const Home: React.FC<HomeProps> = ({ devMode = false }) => {
-  // const [selectedNote, setSelectedNote] = useState("C1");
-
   const [audioStarted, setAudioStarted] = useState(false);
-
-  // const startAudio = async () => {
-  //   await Tone.start();
-  //   console.log("audio is ready");
-  //   setAudioStarted(true);
-  // };
-
   const leftHandActive = useRef<boolean>(false);
   const leftHandPinched = useRef<boolean>(false);
   const rightHandActive = useRef<boolean>(false);
@@ -35,6 +23,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   const leftHandVel = useRef<number>(0);
   const [isMobile, setIsMobile] = useState(true);
   const [hasRendered, setHasRendered] = useState<boolean>(false);
+  const analyserRef = useRef(new Analyser("waveform", 256));
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -59,7 +48,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   const triggerAudio = () => {
     console.log("playing sound");
     let play = playSong;
-    play();
+    play(analyserRef.current);
     setAudioStarted(true);
   };
 
@@ -67,6 +56,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
     <Layout isMobile={isMobile}>
       <div style={{ position: "relative" }}>
         <HandTracking
+          analyser={analyserRef.current}
           leftHandActive={leftHandActive}
           rightHandActive={rightHandActive}
           leftHandPinched={leftHandPinched}
@@ -76,49 +66,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
           isMobile={isMobile}
         />
         {!audioStarted && <AudioPermissionButton startAudio={triggerAudio} />}
-        {/* <PlayAudio onClick={triggerAudio} /> */}
         <TestEffects />
-        {/* <div style={{ minHeight: "500px" }}>
-          {devMode ? (
-            <DevScreen
-              leftHandActive={leftHandActive}
-              leftHandPinched={leftHandPinched}
-              rightHandActive={rightHandActive}
-              rightHandPinched={rightHandPinched}
-              rightHandVel={rightHandVel}
-              leftHandVel={leftHandVel}
-            />
-          ) : (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "start",
-                flexDirection: isMobile ? "column" : "row",
-              }}
-            >
-              {!audioStarted && (
-                <AudioPermissionButton startAudio={startAudio} />
-              )}
-              {audioStarted && (
-                <>
-                  <InstrumentScreen
-                    note={selectedNote}
-                    leftHandPinched={leftHandPinched}
-                    rightHandPinched={rightHandPinched}
-                    rightHandVel={rightHandVel}
-                    leftHandVel={leftHandVel}
-                    isMobile={isMobile}
-                  />
-                  <NoteSelection
-                    onNoteChange={setSelectedNote}
-                    isMobile={isMobile}
-                  />
-                </>
-              )}
-            </div>
-          )}
-        </div> */}
       </div>
     </Layout>
   );
