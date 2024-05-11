@@ -13,13 +13,8 @@ import { getPowerOfSignalAndUpdateStore } from "../utils/tone/getRms";
 
 const HandTracking: React.FC<HandTrackingProps> = ({
   analyser,
-  leftHandActive,
-  rightHandActive,
-  leftHandPinched,
-  rightHandPinched,
-  leftHandVelocity,
-  rightHandVelocity,
   isMobile,
+  isAnimating,
 }) => {
   // References to the video and canvas HTML elements
   const [loading, setLoading] = useState(true);
@@ -38,6 +33,12 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   function map(value, x1, y1, x2, y2) {
     return ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
   }
+
+  const isAnimatingRef = useRef(isAnimating);
+
+  useEffect(() => {
+    isAnimatingRef.current = isAnimating; // Update the ref to the current value
+  }, [isAnimating]);
 
   function drawOnCanvas(ctx, canvas, video) {
     const { targets } = useEffectStore.getState(); // Access the current state
@@ -147,6 +148,8 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   }
 
   useEffect(() => {
+    let animationFrameId;
+
     if (isMobile === null || isMobile === undefined) return;
     async function setupHandTracking() {
       // Resolves the necessary resources for vision tasks
@@ -197,6 +200,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     }
 
     async function predictWebcam() {
+      if (!isAnimatingRef.current) return;
       const video = videoRef.current;
       const canvas = canvasRef.current;
 
@@ -226,16 +230,36 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           canvasCtx.translate(-canvas.width, 0);
           canvasCtx.restore();
           // handle results
-          processResults(results);
           // Request next frame processing
-          requestAnimationFrame(predictWebcam);
+          if (results) {
+            processResults(results);
+          }
+          animationFrameId = requestAnimationFrame(predictWebcam);
         }
       }
     }
 
     // Initiate the hand tracking setup
-    setupHandTracking();
-  }, [isMobile]);
+    if (isAnimating) {
+      setupHandTracking().then(enableWebcam);
+    }
+
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      if (videoRef.current && videoRef.current.srcObject) {
+        const stream = videoRef.current.srcObject;
+        const tracks = stream.getTracks();
+
+        tracks.forEach(function (track) {
+          track.stop();
+        });
+
+        videoRef.current.srcObject = null;
+      }
+    };
+  }, [isMobile, isAnimating]);
 
   return (
     <div

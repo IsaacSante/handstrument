@@ -9,7 +9,7 @@ import { createReverb, updateReverbEffect } from "./effects/Reverb";
 import { createTremolo, updateTremolo } from "./effects/Tremolo";
 
 export default function playSong(analyser: Analyser) {
-  const songUrl = "/afterHours.mp3";
+  const songUrl = "/million.mp3";
   const player = new Player();
 
   player

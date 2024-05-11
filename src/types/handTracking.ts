@@ -1,13 +1,8 @@
 import { Analyser } from "tone";
 export type HandTrackingProps = {
   analyser: Analyser;
-  leftHandActive: React.MutableRefObject<boolean>;
-  rightHandActive: React.MutableRefObject<boolean>;
-  leftHandPinched: React.MutableRefObject<boolean>;
-  rightHandPinched: React.MutableRefObject<boolean>;
-  leftHandVelocity: React.MutableRefObject<number>;
-  rightHandVelocity: React.MutableRefObject<number>;
   isMobile: boolean;
+  isAnimating: boolean;
 };
 
 export type Handedness = {

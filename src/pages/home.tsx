@@ -13,15 +13,14 @@ type HomeProps = {
 
 const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   const [audioStarted, setAudioStarted] = useState(false);
-  const leftHandActive = useRef<boolean>(false);
-  const leftHandPinched = useRef<boolean>(false);
-  const rightHandActive = useRef<boolean>(false);
-  const rightHandPinched = useRef<boolean>(false);
-  const rightHandVel = useRef<number>(0);
-  const leftHandVel = useRef<number>(0);
   const [isMobile, setIsMobile] = useState(true);
   const [hasRendered, setHasRendered] = useState<boolean>(false);
   const analyserRef = useRef(new Analyser("waveform", 256));
+  const [isAnimating, setIsAnimating] = useState(true);
+
+  const toggleAnimation = () => {
+    setIsAnimating(!isAnimating);
+  };
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -54,16 +53,14 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
       <div style={{ position: "relative" }}>
         <HandTracking
           analyser={analyserRef.current}
-          leftHandActive={leftHandActive}
-          rightHandActive={rightHandActive}
-          leftHandPinched={leftHandPinched}
-          rightHandPinched={rightHandPinched}
-          leftHandVelocity={leftHandVel}
-          rightHandVelocity={rightHandVel}
           isMobile={isMobile}
+          isAnimating={isAnimating}
         />
         <TestEffects />
         {!audioStarted && <AudioPermissionButton startAudio={triggerAudio} />}
+        <button onClick={toggleAnimation}>
+          {isAnimating ? "Stop FX" : "Start New FX"}
+        </button>
       </div>
     </Layout>
   );
