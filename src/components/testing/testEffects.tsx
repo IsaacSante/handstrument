@@ -60,7 +60,8 @@ const TestEffects: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ marginBottom: "20px" }}>
+    <div style={{ marginBottom: "10px" }}>
+      <h2>Audio/Visual FX</h2>
       <div>
         {Object.entries(displayEffects).map(([key, value]) => {
           if (key === "reverb") return null; // Skip rendering for "reverb"

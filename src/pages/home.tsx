@@ -58,10 +58,16 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
           isAnimating={isAnimating}
         />
         <TestEffects />
-        <AudioPermissionButton startAudio={triggerAudio} />
-        <button onClick={toggleAnimation}>
-          {isAnimating ? "Stop FX" : "Start New FX"}
-        </button>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <AudioPermissionButton
+            startAudio={triggerAudio}
+            btnText="Start audio"
+          />
+          <AudioPermissionButton
+            startAudio={toggleAnimation}
+            btnText={isAnimating ? "Freeze FX values" : "Find new FX"}
+          />
+        </div>
       </div>
     </Layout>
   );

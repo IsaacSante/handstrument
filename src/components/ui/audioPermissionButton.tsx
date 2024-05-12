@@ -1,23 +1,29 @@
-// @ts-nocheck
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 type AudioPermissionButtonProps = {
   startAudio: () => void;
+  btnText: string;
 };
 
 const AudioPermissionButton: React.FC<AudioPermissionButtonProps> = ({
   startAudio,
+  btnText,
 }) => {
+  const buttonRef = useRef<HTMLButtonElement>(null); // Specify the type of ref for better type checking
+
   useEffect(() => {
-    const handler = async (e: MouseEvent | TouchEvent) => startAudio();
+    const button = buttonRef.current; // Store the current ref in a variable
+    if (button) {
+      // Check if the button is not null
+      button.addEventListener("click", startAudio); // Only add the event listener if the button exists
 
-    document.documentElement.addEventListener("mousedown", handler);
-    document.documentElement.addEventListener("touchstart", handler);
-
-    return () => {
-      document.documentElement.removeEventListener("mousedown", handler);
-      document.documentElement.removeEventListener("touchstart", handler);
-    };
-  }, []); // ensure this effect runs only once
+      return () => {
+        if (button) {
+          // Check again when cleaning up
+          button.removeEventListener("click", startAudio); // Only remove the event listener if the button exists
+        }
+      };
+    }
+  }, [startAudio]);
 
   const buttonStyle = {
     background: "#FFFFFF",
@@ -31,12 +37,12 @@ const AudioPermissionButton: React.FC<AudioPermissionButtonProps> = ({
     outline: "none",
     margin: "12px",
     transition: "background 0.3s ease",
-    touchAction: "manipulation", // Improve touch responsiveness
+    touchAction: "manipulation",
   };
 
   return (
-    <button style={buttonStyle} onClick={startAudio}>
-      <p>Start Audio</p>
+    <button ref={buttonRef} style={buttonStyle}>
+      <p>{btnText}</p>
     </button>
   );
 };

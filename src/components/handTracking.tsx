@@ -20,6 +20,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   const [loading, setLoading] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const previewVideoRef = useRef(null);
   const handLandmarkerRef = useRef<HandLandmarker | null>(null);
   const [videoDimensions, setVideoDimensions] = useState({
     width: 0,
@@ -29,6 +30,31 @@ const HandTracking: React.FC<HandTrackingProps> = ({
   useEffect(() => {
     console.log(videoDimensions);
   }, [videoDimensions]);
+
+  useEffect(() => {
+    if (!isAnimating) {
+      const previewConstraints = {
+        video: { width: isMobile ? 120 : 160, height: isMobile ? 160 : 120 },
+      };
+      navigator.mediaDevices
+        .getUserMedia(previewConstraints)
+        .then((stream) => {
+          if (previewVideoRef.current) {
+            previewVideoRef.current.srcObject = stream;
+          }
+        })
+        .catch((error) => console.error("Stream error:", error));
+
+      return () => {
+        // Clean up the stream when the component unmounts or isAnimating changes
+        if (previewVideoRef.current && previewVideoRef.current.srcObject) {
+          const tracks = previewVideoRef.current.srcObject.getTracks();
+          tracks.forEach((track) => track.stop());
+          previewVideoRef.current.srcObject = null;
+        }
+      };
+    }
+  }, [isMobile, isAnimating]);
 
   function map(value, x1, y1, x2, y2) {
     return ((value - x1) * (y2 - x2)) / (y1 - x1) + x2;
@@ -320,6 +346,24 @@ const HandTracking: React.FC<HandTrackingProps> = ({
           borderRadius: "25px",
         }}
       />
+      {!isAnimating && (
+        <video
+          ref={previewVideoRef}
+          autoPlay
+          playsInline
+          muted
+          style={{
+            position: "absolute",
+            width: "25%", // Size of the preview relative to its container
+            height: "auto",
+            bottom: "10px",
+            right: "10px",
+            borderRadius: "10px",
+            border: "2px solid white",
+            transform: "scaleX(-1)", // Mirroring the video
+          }}
+        />
+      )}
     </div>
   );
 };
