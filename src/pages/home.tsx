@@ -11,8 +11,7 @@ type HomeProps = {
   devMode?: boolean;
 };
 
-const Home: React.FC<HomeProps> = ({ devMode = false }) => {
-  const [audioStarted, setAudioStarted] = useState(false);
+const Home: React.FC<HomeProps> = () => {
   const [isMobile, setIsMobile] = useState(true);
   const [hasRendered, setHasRendered] = useState<boolean>(false);
   const analyserRef = useRef(new Analyser("waveform", 256));
