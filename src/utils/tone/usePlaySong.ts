@@ -22,7 +22,7 @@ const usePlaySong = (analyser: Analyser, shouldPlay: boolean) => {
   const player = useAudioPlayer();
 
   useEffect(() => {
-    const songUrl = "/million.mp3";
+    const songUrl = "https://s3.amazonaws.com/isaacsante.com/million.mp3";
     player
       .load(songUrl)
       .then(() => {
