@@ -69,11 +69,15 @@ const TestEffects: React.FC = () => {
           let min = 0;
           let max = 1;
           if (key === "shift") {
+            key = "Left hand (X pos) : Pitch shift";
             min = -12;
             max = 12;
           }
+          if (key === "feedback") {
+            key = "Left hand (Y pos) : Feedback fx";
+          }
           if (key === "tremolo") {
-            key = "audio reactive";
+            key = "Right hand (in frame) : Audio reactivity";
             min = 0;
             max = 0.1;
             if (value > 0) {

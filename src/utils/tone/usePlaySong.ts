@@ -1,46 +1,67 @@
-import { useEffectStore } from "../../../useEffectStore";
+// usePlaySong.js
+import React, { useRef, useEffect, useState } from "react";
 import { Player, Analyser } from "tone";
+import { useEffectStore } from "../../../useEffectStore";
 import {
   createFeedbackDelay,
   updateFeedbackEffect,
 } from "./effects/FeedbackDelay";
 import { createPitchShift, updatePitchShift } from "./effects/PitchShift";
-import { createReverb, updateReverbEffect } from "./effects/Reverb";
-import { createTremolo, updateTremolo } from "./effects/Tremolo";
 
-export default function playSong(analyser: Analyser) {
-  const songUrl = "/million.mp3";
-  const player = new Player();
+const useAudioPlayer = () => {
+  const initialVolume = -12;
+  const playerRef = useRef<Player | null>(null);
+  if (!playerRef.current) {
+    playerRef.current = new Player();
+    playerRef.current.volume.value = initialVolume;
+  }
+  return playerRef.current;
+};
 
-  player
-    .load(songUrl)
-    .then(() => {
-      console.log("Audio buffer loaded");
+const usePlaySong = (analyser: Analyser, shouldPlay: boolean) => {
+  const player = useAudioPlayer();
 
-      // Initialize the effects
-      const feedbackDelay = createFeedbackDelay("8n");
-      const pitchShift = createPitchShift();
-      //const reverb = createReverb();
-      //const tremolo = createTremolo();
+  useEffect(() => {
+    const songUrl = "/million.mp3";
+    player
+      .load(songUrl)
+      .then(() => {
+        const feedbackDelay = createFeedbackDelay("8n");
+        const pitchShift = createPitchShift();
+        feedbackDelay.wet.value = 0;
+        player.connect(feedbackDelay).connect(pitchShift).connect(analyser);
 
-      feedbackDelay.wet.value = 0;
-      player.connect(feedbackDelay).connect(pitchShift).connect(analyser);
+        let prevState = useEffectStore.getState().targets;
+        const unsubscribe = useEffectStore.subscribe(() => {
+          const newState = useEffectStore.getState().targets;
+          updateFeedbackEffect(feedbackDelay, newState.feedback);
+          updatePitchShift(pitchShift, newState.shift);
+          prevState = newState;
+        });
 
-      let prevState = useEffectStore.getState().targets;
-      useEffectStore.subscribe(() => {
-        const newState = useEffectStore.getState().targets;
-        updateFeedbackEffect(feedbackDelay, newState.feedback);
-        updatePitchShift(pitchShift, newState.shift);
-        // updateReverbEffect(reverb, newState.reverb);
-        // updateTremolo(tremolo, newState.tremolo);
-        prevState = newState;
+        return () => {
+          unsubscribe();
+          player.dispose();
+          feedbackDelay.dispose();
+          pitchShift.dispose();
+        };
+      })
+      .catch((e) => {
+        console.error("Error loading audio file:", e);
       });
 
-      if (player.state !== "started") {
-        player.start();
+    if (shouldPlay && player.state !== "started") {
+      player.start();
+    }
+
+    return () => {
+      if (player) {
+        player.stop();
       }
-    })
-    .catch((e) => {
-      console.error("Error loading audio file:", e);
-    });
-}
+    };
+  }, [analyser, shouldPlay]);
+
+  return null;
+};
+
+export default usePlaySong;

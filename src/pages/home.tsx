@@ -3,7 +3,7 @@ import HandTracking from "../components/handTracking";
 import Layout from "../components/layout/layout";
 import { debounce } from "../utils/functions/debounce";
 import TestEffects from "../components/testing/testEffects";
-import playSong from "../utils/tone/usePlaySong";
+import usePlaySong from "../utils/tone/usePlaySong"; // Adjust path as necessary
 import AudioPermissionButton from "../components/ui/audioPermissionButton";
 import { Analyser } from "tone";
 
@@ -17,6 +17,9 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   const [hasRendered, setHasRendered] = useState<boolean>(false);
   const analyserRef = useRef(new Analyser("waveform", 256));
   const [isAnimating, setIsAnimating] = useState(true);
+  const [shouldPlay, setShouldPlay] = useState(false);
+
+  usePlaySong(analyserRef.current, shouldPlay);
 
   const toggleAnimation = () => {
     setIsAnimating(!isAnimating);
@@ -43,9 +46,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
   }
 
   const triggerAudio = () => {
-    let play = playSong;
-    play(analyserRef.current);
-    setAudioStarted(true);
+    setShouldPlay(true); // Set shouldPlay to true to start the audio
   };
 
   return (
@@ -57,7 +58,7 @@ const Home: React.FC<HomeProps> = ({ devMode = false }) => {
           isAnimating={isAnimating}
         />
         <TestEffects />
-        {!audioStarted && <AudioPermissionButton startAudio={triggerAudio} />}
+        <AudioPermissionButton startAudio={triggerAudio} />
         <button onClick={toggleAnimation}>
           {isAnimating ? "Stop FX" : "Start New FX"}
         </button>

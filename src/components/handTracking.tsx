@@ -49,7 +49,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     const newLeftX = targets.shift * canvas.width;
-    const newRightX = targets.tremolo * canvas.width;
+    const newRightX = targets.tremolo;
     const newLeftY = targets.feedback * canvas.height;
     const newRightY = targets.reverb * canvas.height;
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
@@ -57,12 +57,15 @@ const HandTracking: React.FC<HandTrackingProps> = ({
 
     const newRms = getPowerOfSignalAndUpdateStore(analyser);
 
-    // Adjust the multiplier based on both hands
     let multi = 1;
+    let doubleMult = 1;
     if (newRms > 0.0 && newRightX > 0) {
-      multi = map(newRms, 0.01, 0.1, 0, 1) * newRightX;
+      multi = map(newRms, 0.01, 0.1, 0, 1) * 2;
+      if (newLeftX) {
+        doubleMult = multi * 3;
+      }
     }
-    const stepSizeX = Math.floor(map(newLeftX, 0, canvas.width, 10, 20));
+    const stepSizeX = Math.floor(map(newLeftX, 0, canvas.width, 5, 30));
     const stepSizeY = Math.floor(
       map(newLeftY, 0, canvas.height, stepSizeX, stepSizeX * 2)
     );
@@ -77,7 +80,7 @@ const HandTracking: React.FC<HandTrackingProps> = ({
         ctx.fillStyle = `rgb(${redVal * multi}, ${greenVal * multi}, ${
           blueVal * multi
         })`;
-        ctx.fillRect(flippedX, y, stepSizeX, stepSizeY);
+        ctx.fillRect(flippedX, y + multi, stepSizeX * doubleMult, stepSizeY);
       }
     }
     ctx.restore();
@@ -91,8 +94,6 @@ const HandTracking: React.FC<HandTrackingProps> = ({
     RightY: "feedback",
   };
 
-  // get cordinates and update them in the store
-  // pass them to the draw function on the canvas
   function getTargetCordinates(hand, landmarks) {
     const targetIndex = 9;
     const targetLandmark = landmarks[targetIndex];
