@@ -1,4 +1,4 @@
-// usePlaySong.js
+// @ts-nocheck
 import { useRef, useEffect } from "react";
 import { Player, Analyser } from "tone";
 import { useEffectStore } from "../../../useEffectStore";
