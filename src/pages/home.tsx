@@ -58,7 +58,7 @@ const Home: React.FC<HomeProps> = () => {
         />
         <TestEffects />
         <div
-          className="tailwind.config.jspy-4"
+          className="py-4"
           style={{ display: "flex", justifyContent: "space-between" }}
         >
           <AudioPermissionButton

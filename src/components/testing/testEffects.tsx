@@ -60,9 +60,9 @@ const TestEffects: React.FC = () => {
   }, []);
 
   return (
-    <div className="tailwind.config.jspy-2">
-      <h1 className="tailwind.config.jstext-2xl tailwind.config.jsmb-2">
-        Audio/Visual FX
+    <div className="py-2">
+      <h1 className="text-2xl mb-2">
+        <strong>Audio/ Visual Effects</strong>
       </h1>
       <div>
         {Object.entries(displayEffects).map(([key, value]) => {
@@ -72,15 +72,15 @@ const TestEffects: React.FC = () => {
           let min = 0;
           let max = 1;
           if (key === "shift") {
-            key = "Left hand (X pos) : Pitch shift";
+            key = "Left hand X - Pitch shift";
             min = -12;
             max = 12;
           }
           if (key === "feedback") {
-            key = "Left hand (Y pos) : Feedback fx";
+            key = "Left hand Y - Feedback fx";
           }
           if (key === "tremolo") {
-            key = "Right hand (in frame) : Audio reactivity";
+            key = "Right hand - Audio reactivity";
             min = 0;
             max = 0.1;
             if (value > 0) {
