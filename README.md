@@ -1,42 +1,49 @@
-# Instrumentalist
+# Handstrument
 
-What if we could make music when we mimic instruments?
-Using ML and paying attention to certain hand gestures maybe we can!
+A computer vision and audio-visual tool that allows you to control visuals and audio effects using your hands in real-time!
 
-![mimic](https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExdW10YjBjb3FmOGk0d2owNDB2Y2d4MXg1c2tqd2xrMTJ6azRjejhyeiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wpu0lK7V0sSB3bsUdo/giphy.gif)
+## Overview
 
-This is the first stage of such an app, starting off with drums and might expand to other instruments in the future.
+Handstrument leverages MediaPipe for hand tracking and Tone.js for audio effects, enabling interactive DJ-like music and visual experiences through hand gestures.
 
-## Todo
+## Features
 
-## Done
+- **Hand Tracking**: Detects the presence and movements of both hands.
+- **Velocity Calculation**: Measures hand velocity to influence audio playback.
+- **Audio Integration**: Uses Tone.js to map hand movements to pitch and feedback effects.
+- **Interactive UI**: Displays feedback to users about their hand movements and actions.
+- **Mobile Compatibility**: Ensures functionality on mobile devices, including a loading screen for better UX.
 
-- Import MediaPipe
-- Getting vision library via cdn @mediapipe/tasks-vision
-- Console logging finger values
-- Checking if left and right hand are present
-- Calculate pinch
-- Update pinch ref
-- Calculate velocity
-- Import Tone or other music library.
-- Tie pinch to trigger drum sample.
-- Velocity pass a certain threshold triggers music.
-- New notes for each hand!
-- Build UI to let people know if theyre hands are triggering.
-- Let people use notes for each hand.
-- Upload to netlify.
-- Debug online production drawing thing? (made my own drawing functions)
-- Add a loading screen takes longer on mobile.
-- Make sure its working on mobile.
+## Setup
 
-## For future
+1. **Import MediaPipe**:
+   - Include the vision library via CDN: `@mediapipe/tasks-vision`.
+2. **Hand Tracking**:
+   - Log finger values in the console.
+3. **Gesture Calculations**:
+   - Track hand X, Y coordinates.
+   - Calculate hand velocity.
+4. **Audio Integration**:
+   - Import Tone.js or another music library.
+   - Use hand movements to influence audio effects' wetness.
+5. **User Interface**:
+   - Build a UI to indicate hand-triggered actions.
+   - Allow users to use different notes for each hand.
+6. **Deployment**:
+   - Upload the project to Netlify.
+   - Debug and ensure functionality in the production environment, including custom drawing functions.
+7. **Mobile Support**:
+   - Add a loading screen for mobile devices.
+   - Verify that the tool works correctly on mobile.
 
-- Make a config.json to store threshold values for app.
+## Future Enhancements
 
-- Refactor refs to be in one state to make it simpler to mutate in child functions
+- **Configuration Management**:
+  - Create a `config.json` file to store threshold values for the app.
+- **Code Refactoring**:
+  - Consolidate references into a single state for simpler mutations in child functions.
 
-- Expand app to include piano and guitar guestures.
+## Important Notes
 
-## Personal note
-
-Audio wont work on IOS if phone is in silent mode!
+- **iOS Compatibility**:
+  - Audio will not work on iOS devices if the phone is in silent mode.
