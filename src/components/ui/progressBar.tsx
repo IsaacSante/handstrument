@@ -1,3 +1,6 @@
+import React from "react";
+import { Progress } from "@/components/ui/progress";
+
 interface ProgressBarProps {
   title: string;
   subtitle: string;
@@ -32,44 +35,25 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
 
   const percentage = calculatePercentage();
 
-  let color;
+  let colorClass;
   if (percentage < 33) {
-    color = "#98FB98"; // Pastel green
+    colorClass = "tailwind.config.jsbg-green-300"; // Tailwind class for pastel green
   } else if (percentage < 67) {
-    color = "#ffc107"; // Gold
+    colorClass = "tailwind.config.jsbg-yellow-400"; // Tailwind class for gold
   } else {
-    color = "#FF6347"; // Pastel red
+    colorClass = "tailwind.config.jsbg-red-400"; // Tailwind class for pastel red
   }
 
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <p>
-          <strong>{title}</strong>
-        </p>
+    <div className="tailwind.config.jspy-1">
+      <div className="tailwind.config.jsflex tailwind.config.jsjustify-between tailwind.config.jsitems-center">
+        <p>{title}</p>
         <p>{subtitle}</p>
       </div>
-      <div
-        style={{
-          height: "8px",
-          width: "100%",
-          backgroundColor: "#E1FFE4",
-          borderRadius: "50px",
-        }}
-      >
-        <div
-          style={{
-            height: "100%",
-            width: `${percentage}%`,
-            backgroundColor: color,
-            borderRadius: "inherit",
-          }}
+      <div className="tailwind.config.jsrelative tailwind.config.jsh-4 tailwind.config.jsw-full tailwind.config.jsbg-secondary tailwind.config.jsrounded-full tailwind.config.jsoverflow-hidden">
+        <Progress
+          value={percentage}
+          className={`tailwind.config.jsh-full ${colorClass} tailwind.config.jstransition-all`}
         />
       </div>
     </div>

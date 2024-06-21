@@ -60,11 +60,13 @@ const TestEffects: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ marginBottom: "10px" }}>
-      <h2>Audio/Visual FX</h2>
+    <div className="tailwind.config.jspy-2">
+      <h1 className="tailwind.config.jstext-2xl tailwind.config.jsmb-2">
+        Audio/Visual FX
+      </h1>
       <div>
         {Object.entries(displayEffects).map(([key, value]) => {
-          if (key === "reverb") return null; // Skip rendering for "reverb"
+          if (key === "reverb") return null; // Skip rendering for 'reverb'
 
           // Determine the range based on the key
           let min = 0;

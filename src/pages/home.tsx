@@ -57,7 +57,10 @@ const Home: React.FC<HomeProps> = () => {
           isAnimating={isAnimating}
         />
         <TestEffects />
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+          className="tailwind.config.jspy-4"
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
           <AudioPermissionButton
             startAudio={triggerAudio}
             btnText="Start audio"

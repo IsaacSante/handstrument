@@ -11,27 +11,9 @@ const Section: React.FC<SectionProps> = ({
   children,
   className = "",
 }) => {
-  const containerStyle: React.CSSProperties = {
-    width: "100%",
-    ...(className ? { className } : {}), // Only add className if provided
-    padding: "16px", // Default padding for all screen sizes
-  };
-
-  const titleStyle: React.CSSProperties = {
-    fontSize: "24px", // equivalent to text-2xl
-    fontWeight: "bold",
-    marginBottom: "16px", // equivalent to mb-4
-  };
-
-  // Adjust padding for mobile screens
-  if (window.matchMedia("(max-width: 768px)").matches) {
-    containerStyle.padding = "8px";
-    titleStyle.fontSize = "20px"; // Adjust title size for smaller screens
-  }
-
   return (
-    <div style={containerStyle}>
-      {title && <h3 style={titleStyle}>{title}</h3>}
+    <div className={`w-full p-4 sm:p-2 ${className}`}>
+      {title && <h3 className="text-2xl font-bold mb-4 sm:text-xl">{title}</h3>}
       {children}
     </div>
   );

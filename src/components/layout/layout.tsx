@@ -29,7 +29,10 @@ const mobileStyle: { containerMain: CSSProperties } = {
 
 export default function Layout({ children, isMobile }: LayoutProps) {
   return (
-    <main style={isMobile ? mobileStyle.containerMain : style.containerMain}>
+    <main
+      className="dark"
+      style={isMobile ? mobileStyle.containerMain : style.containerMain}
+    >
       {children}
     </main>
   );
