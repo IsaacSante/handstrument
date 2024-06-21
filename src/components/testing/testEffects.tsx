@@ -62,7 +62,7 @@ const TestEffects: React.FC = () => {
   return (
     <div className="py-2">
       <h1 className="text-2xl mb-2">
-        <strong>Audio/ Visual Effects</strong>
+        <strong>Audio & Visual Effects</strong>
       </h1>
       <div>
         {Object.entries(displayEffects).map(([key, value]) => {
